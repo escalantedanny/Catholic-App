@@ -1,27 +1,27 @@
 import SwiftUI
 import CacheManager
 
-struct HomeBodyView: View {
+struct ShowBodyView: View {
+    
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
-
+    
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             if let versiculo = viewModel.versiculo {
                 Text("\(versiculo.libro) \(versiculo.capitulo), \(versiculo.versiculo)")
                     .padding()
-                Text("\(versiculo.texto)")
+                Text(versiculo.texto)
                     .fontWeight(.bold)
             } else {
-                Text("Salmos 18, 29")
+                Text("Cargando...!")
                     .padding()
-                Text("Tú eres, Yahveh, mi lámpara, mi Dios que alumbra mis tinieblas")
-                    .fontWeight(.bold)
+            }
+        }
+        .padding()
+        .onAppear {
+            Task {
+                await viewModel.fetchRandomVersicle()
             }
         }
     }
 }
-
-#Preview {
-    HomeBodyView()
-}
-

@@ -1,57 +1,48 @@
 import SwiftUI
+import CacheManager
 
 struct ContentView: View {
+    
+    @State private var showMenu = false
     @State private var selectedTab: Int = 0
-
-        var body: some View {
+    @State private var viewID = UUID()
+    @State private var bookSelected: String = ""
+    
+    var body: some View {
+        ZStack(alignment: .leading) {
             VStack(spacing: 0) {
-                TopBarView()
+                topBarView(for: selectedTab, showMenu: $showMenu)
+                    .background(Color.gray)
 
-                Group {
-                    switch selectedTab {
-                    case 0:
-                        ShowBodyView()
-                    case 1:
-                        Text("contenido dinámico 1")
-                    case 2:
-                        Text("contenido dinámico 2")
-                    case 3:
-                        Text("contenido dinámico 3")
-                    case 4:
-                        Text("contenido dinámico 4")
-                    default:
-                        Text("contenido dinámico default")
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                contentView(for: selectedTab, bookSelected: bookSelected)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                 BottomBarView(selectedTab: $selectedTab)
             }
-            .edgesIgnoringSafeArea(.bottom)
-        }
-}
+            .disabled(showMenu)
 
-struct ShowBodyView: View {
-    @StateObject private var viewModel = VersiculoViewModel()
-
-    var body: some View {
-        VStack(alignment: .leading) {
-            if let versiculo = viewModel.versiculo {
-                Text("\(versiculo.libro) \(versiculo.capitulo), \(versiculo.versiculo)")
-                    .padding()
-                Text(versiculo.texto)
-                    .fontWeight(.bold)
-            } else {
-                Text("Salmos 18, 29")
-                    .padding()
-                Text("Tú eres, Yahveh, mi lámpara, mi Dios que alumbra mis tinieblas")
-                    .fontWeight(.bold)
+            if showMenu {
+                Color.black.opacity(0.3)
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        withAnimation {
+                            showMenu = false
+                        }
+                    }
+                if selectedTab == 0 || selectedTab == 3 || selectedTab == 4 {
+                    SideMenuView(showMenu: $showMenu)
+                        .transition(.move(edge: .leading))
+                        .zIndex(1)
+                } else {
+                    MenuList(showMenu: $showMenu, bookSelected: $bookSelected)
+                        .transition(.move(edge: .leading))
+                        .zIndex(1)
+                }
             }
         }
-        .padding()
+        .animation(.easeInOut, value: showMenu)
     }
 }
-
 
 
 #Preview {

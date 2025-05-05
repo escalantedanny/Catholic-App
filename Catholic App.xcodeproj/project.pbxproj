@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		279834AE2DB93DA000A8135B /* CacheManager in Frameworks */ = {isa = PBXBuildFile; productRef = 279834AD2DB93DA000A8135B /* CacheManager */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		27ABE71D2DB7DE0E002A9EED /* Catholic App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Catholic App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				279834AE2DB93DA000A8135B /* CacheManager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = "Catholic App";
 			packageProductDependencies = (
+				279834AD2DB93DA000A8135B /* CacheManager */,
 			);
 			productName = "Catholic App";
 			productReference = 27ABE71D2DB7DE0E002A9EED /* Catholic App.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 27ABE7142DB7DE0E002A9EED;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				279834AC2DB93DA000A8135B /* XCRemoteSwiftPackageReference "CacheManager" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 27ABE71E2DB7DE0E002A9EED /* Products */;
 			projectDirPath = "";
@@ -341,6 +350,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		279834AC2DB93DA000A8135B /* XCRemoteSwiftPackageReference "CacheManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jogan1075/CacheManager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		279834AD2DB93DA000A8135B /* CacheManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 279834AC2DB93DA000A8135B /* XCRemoteSwiftPackageReference "CacheManager" */;
+			productName = CacheManager;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 27ABE7152DB7DE0E002A9EED /* Project object */;
 }

@@ -1,0 +1,15 @@
+{
+  "originHash" : "638330e5ac8080be6e3ac1f1f515505e17d24a48beb72ebfd176252f677366b9",
+  "pins" : [
+    {
+      "identity" : "cachemanager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jogan1075/CacheManager",
+      "state" : {
+        "revision" : "02c29fc23683ac4a4be26f4552a314daabd6621f",
+        "version" : "1.0.2"
+      }
+    }
+  ],
+  "version" : 3
+}
