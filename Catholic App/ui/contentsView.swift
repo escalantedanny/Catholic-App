@@ -4,33 +4,43 @@ import CacheManager
 @ViewBuilder
 func contentView(for tab: Int, bookSelected: String) -> some View {
 
-    
     switch tab {
-    case 0:
-        ShowBodyView()
-    case 1:
-        DetailBookView(bookSelected: bookSelected)
-    case 2:
-        DetailBookView(bookSelected: bookSelected)
-    case 3:
-        Text("contenido dinámico 3")
-    case 4:
-        Text("contenido dinámico 4")
-    default:
-        ShowBodyView()
+        case 0:
+            ShowBodyView()
+        case 1:
+            DetailBookView(bookSelected: bookSelected)
+        case 2:
+            DetailBookView(bookSelected: bookSelected)
+        case 3:
+            Text("contenido dinámico 3")
+        case 4:
+            Text("contenido dinámico 4")
+        default:
+            ShowBodyView()
     }
 }
 
 
-@ViewBuilder
-func topBarView(for tab: Int, showMenu: Binding<Bool>) -> some View {
+struct TopBarView: View {
+    @Binding var showMenu: Bool
 
-    switch tab {
-        case 0, 3, 4:
-            BasicTopBarView(showMenu: showMenu)
-        case 1, 2:
-            DetailTopBarMenu(showMenu: showMenu)
-        default:
-            BasicTopBarView(showMenu: showMenu)
+    var body: some View {
+        HStack {
+            Text(Constants.Titles.appName)
+                .font(.title2)
+                .bold()
+            Spacer()
+            Button(action: {
+                withAnimation {
+                    showMenu = true
+                }
+            }) {
+                Image(systemName: Constants.Icons.menu)
+                    .padding()
+            }
+        }
+        .padding(.horizontal)
+        .padding(.top, 10)
+        .foregroundColor(.white)
     }
 }

@@ -64,6 +64,22 @@ struct ChapterView: View {
                                 .multilineTextAlignment(.leading)
                         }
                         .padding(16)
+                        .contextMenu {
+                            let versiculo = Versiculo(
+                                libro: libro,
+                                capitulo: String(chapter),
+                                versiculo: key,
+                                texto: verse
+                            )
+                            Button {
+                                viewModel.saveFavoriteVersicle(versiculo:versiculo)
+                            } label : {
+                                HStack {
+                                    Text("Agregar a Favoritos")
+                                    Image(systemName: "star.fill")
+                                }
+                            }
+                        }
                     }
                 } else {
                     ProgressView("Cargando capítulo...")

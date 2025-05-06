@@ -9,38 +9,43 @@ struct ContentView: View {
     @State private var bookSelected: String = ""
     
     var body: some View {
-        ZStack(alignment: .leading) {
-            VStack(spacing: 0) {
-                topBarView(for: selectedTab, showMenu: $showMenu)
-                    .background(Color.gray)
-                
-                contentView(for: selectedTab, bookSelected: bookSelected)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+        NavigationStack {
+            ZStack(alignment: .leading) {
+                VStack(spacing: 0) {
 
-                BottomBarView(selectedTab: $selectedTab)
-            }
-            .disabled(showMenu)
-
-            if showMenu {
-                Color.black.opacity(0.3)
-                    .edgesIgnoringSafeArea(.all)
-                    .onTapGesture {
-                        withAnimation {
-                            showMenu = false
-                        }
+                    if selectedTab == 0 || selectedTab == 1 || selectedTab == 4 {
+                        TopBarView(showMenu: $showMenu)
+                            .background(Color.gray)
                     }
-                if selectedTab == 0 || selectedTab == 3 || selectedTab == 4 {
-                    SideMenuView(showMenu: $showMenu, selectedTab: $selectedTab)
-                        .transition(.move(edge: .leading))
-                        .zIndex(1)
-                } else {
-                    MenuList(showMenu: $showMenu, bookSelected: $bookSelected)
-                        .transition(.move(edge: .leading))
-                        .zIndex(1)
+                    
+                    contentView(for: selectedTab, bookSelected: bookSelected)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                    BottomBarView(selectedTab: $selectedTab)
+                }
+                .disabled(showMenu)
+
+                if showMenu {
+                    Color.black.opacity(0.3)
+                        .edgesIgnoringSafeArea(.all)
+                        .onTapGesture {
+                            withAnimation {
+                                showMenu = false
+                            }
+                        }
+                    if selectedTab == 0 || selectedTab == 3 || selectedTab == 4 {
+                        SideMenuView(showMenu: $showMenu, selectedTab: $selectedTab)
+                            .transition(.move(edge: .leading))
+                            .zIndex(1)
+                    } else {
+                        MenuList(showMenu: $showMenu, bookSelected: $bookSelected)
+                            .transition(.move(edge: .leading))
+                            .zIndex(1)
+                    }
                 }
             }
+            .animation(.easeInOut, value: showMenu)
         }
-        .animation(.easeInOut, value: showMenu)
     }
 }
 

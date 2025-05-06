@@ -20,7 +20,7 @@ struct BasicTopBarView: View {
         }
         .padding(.horizontal)
         .padding(.top, 10)
-        .foregroundColor(.white)
+        .foregroundColor(.blue)
     }
 }
 
@@ -51,5 +51,5 @@ struct DetailTopBarMenu: View {
 
 
 #Preview {
-    BasicTopBarView(showMenu: .constant(true))
+    DetailTopBarMenu(showMenu: .constant(true))
 }

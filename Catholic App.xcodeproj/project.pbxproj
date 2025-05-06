@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		279694C52DCA9A57007837A6 /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 279694C42DCA9A57007837A6 /* Navigation */; };
 		279834AE2DB93DA000A8135B /* CacheManager in Frameworks */ = {isa = PBXBuildFile; productRef = 279834AD2DB93DA000A8135B /* CacheManager */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				279694C52DCA9A57007837A6 /* Navigation in Frameworks */,
 				279834AE2DB93DA000A8135B /* CacheManager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +73,7 @@
 			name = "Catholic App";
 			packageProductDependencies = (
 				279834AD2DB93DA000A8135B /* CacheManager */,
+				279694C42DCA9A57007837A6 /* Navigation */,
 			);
 			productName = "Catholic App";
 			productReference = 27ABE71D2DB7DE0E002A9EED /* Catholic App.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				279834AC2DB93DA000A8135B /* XCRemoteSwiftPackageReference "CacheManager" */,
+				279694C32DCA9A57007837A6 /* XCRemoteSwiftPackageReference "NavigationManager" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 27ABE71E2DB7DE0E002A9EED /* Products */;
@@ -352,6 +356,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		279694C32DCA9A57007837A6 /* XCRemoteSwiftPackageReference "NavigationManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jogan1075/NavigationManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		279834AC2DB93DA000A8135B /* XCRemoteSwiftPackageReference "CacheManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jogan1075/CacheManager";
@@ -363,6 +375,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		279694C42DCA9A57007837A6 /* Navigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 279694C32DCA9A57007837A6 /* XCRemoteSwiftPackageReference "NavigationManager" */;
+			productName = Navigation;
+		};
 		279834AD2DB93DA000A8135B /* CacheManager */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 279834AC2DB93DA000A8135B /* XCRemoteSwiftPackageReference "CacheManager" */;

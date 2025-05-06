@@ -123,4 +123,23 @@ class BibleApiViewModel: ObservableObject {
             }
         }
     }
+    
+    @MainActor
+    func saveFavoriteVersicle(versiculo: Versiculo) {
+        var favoritos: [Versiculo] = self.cache.get(forKey: "FAVORITE_LIST") ?? []
+
+        if !favoritos.contains(where: {
+            $0.libro == versiculo.libro &&
+            $0.capitulo == versiculo.capitulo &&
+            $0.versiculo == versiculo.versiculo
+        }) {
+            favoritos.append(versiculo)
+            self.cache.save(favoritos, forKey: "FAVORITE_LIST", expiration: .never)
+            print("✅ Versículo guardado en favoritos.")
+        } else {
+            print("⚠️ El versículo ya está en favoritos.")
+        }
+
+        print("Favoritos actuales:", favoritos)
+    }
 }

@@ -40,12 +40,24 @@ struct ShowBodyView: View {
                     .padding()
                     
                     if let versiculo = viewModel.versiculo {
-                        Text("\(versiculo.libro.localizedUppercase) \(versiculo.capitulo), \(versiculo.versiculo)")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .bold()
-                        
-                        Text(versiculo.texto)
-                            .padding()
+                            VStack {
+                                Text("\(versiculo.libro.localizedUppercase) \(versiculo.capitulo), \(versiculo.versiculo)")
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .bold()
+                                
+                                Text(versiculo.texto)
+                                    .padding()
+                            }
+                            .contextMenu {
+                                Button {
+                                    viewModel.saveFavoriteVersicle(versiculo:versiculo)
+                                } label : {
+                                    HStack {
+                                        Text("Agregar a Favoritos")
+                                        Image(systemName: "star.fill")
+                                    }
+                                }
+                            }
                     } else {
                         Text("Cargando...!")
                             .padding()
