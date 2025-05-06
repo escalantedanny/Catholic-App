@@ -18,13 +18,12 @@ struct BasicTopBarView: View {
                     .padding()
             }
         }
-        .padding()
-        .background(Color.white)
-        .foregroundColor(.black)
-        .frame(height: 60)
+        .padding(.horizontal)
+        .padding(.top, 10) // si quieres espacio desde el top
+        .foregroundColor(.white) // blanco si la imagen es oscura
+        // Sin .background ni .frame fijo
     }
 }
-
 
 struct DetailTopBarMenu: View {
     @Binding var showMenu: Bool

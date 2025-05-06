@@ -20,7 +20,7 @@ struct SideMenuView: View {
         }
         .padding(.top, 60)
         .padding(.horizontal, 16)
-        .frame(maxWidth: .infinity, alignment: .leading) // ⬅ Anclado a la izquierda
+        .frame(maxWidth: .infinity, alignment: .leading)
         .frame(width: 250)
         .background(Color.white)
         .edgesIgnoringSafeArea(.all)

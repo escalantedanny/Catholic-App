@@ -54,7 +54,7 @@ struct BottomBarView: View {
                 .foregroundColor(selectedTab == 4 ? .blue : .gray)
             }
         }
-        .padding(.vertical, 16)
+        .padding(.vertical, 8)
         .padding(.horizontal, 32)
         .background(Color(UIColor.systemGray6))
     }

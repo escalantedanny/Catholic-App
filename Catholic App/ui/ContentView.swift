@@ -14,6 +14,37 @@ struct ContentView: View {
                 topBarView(for: selectedTab, showMenu: $showMenu)
                     .background(Color.gray)
 
+                Image("rosario_image")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: UIScreen.main.bounds.width, height: 250)
+                    .clipped()
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(Constants.keys.list, id: \.0) { item in
+                            Button(action: {
+                                print("Botón \(item.0) presionado")
+                            }) {
+                                VStack {
+                                    Image(systemName: item.1)
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+
+                                    Text(item.0)
+                                        .font(.caption)
+                                }
+                                .frame(width: 80, height: 80)
+                                .background(Color.blue.opacity(0.2))
+                                .cornerRadius(16)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+
                 contentView(for: selectedTab, bookSelected: bookSelected)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
 

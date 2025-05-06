@@ -6,9 +6,10 @@ struct ShowBodyView: View {
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 6) {
+        
             if let versiculo = viewModel.versiculo {
-                Text("\(versiculo.libro) \(versiculo.capitulo), \(versiculo.versiculo)")
+                Text("\(versiculo.libro.localizedUppercase) \(versiculo.capitulo), \(versiculo.versiculo)")
                     .padding()
                 Text(versiculo.texto)
                     .fontWeight(.bold)
@@ -23,5 +24,10 @@ struct ShowBodyView: View {
                 await viewModel.fetchRandomVersicle()
             }
         }
+        Spacer()
     }
+}
+
+#Preview {
+    ShowBodyView()
 }

@@ -79,6 +79,6 @@ struct ChapterView: View {
 
 #Preview {
     NavigationStack {
-        DetailBookView(bookSelected: "salmos")
+        DetailBookView(bookSelected: "oseas")
     }
 }
