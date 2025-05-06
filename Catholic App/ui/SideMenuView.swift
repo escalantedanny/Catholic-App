@@ -4,10 +4,19 @@ import CacheManager
 struct SideMenuView: View {
 
     @Binding var showMenu: Bool
+    @Binding var selectedTab: Int
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Label(Constants.Titles.home, systemImage: Constants.Icons.home)
+            Button(action: {
+                withAnimation {
+                    showMenu = false
+                    selectedTab = 0
+                }
+            }) {
+                Label(Constants.Titles.home, systemImage: Constants.Icons.home)
+                    .foregroundColor(.black)
+            }
             Label(Constants.Titles.settings, systemImage: Constants.Icons.gear)
             Label(Constants.Titles.closeCession, systemImage: Constants.Icons.arrowBackward)
                 .onTapGesture {
@@ -44,6 +53,7 @@ struct MenuList: View {
                         if bookName.lowercased() == "mateo" {
                             ExtractedView(text: "Nuevo Testamento")
                         } else if bookName.lowercased() == "genesis" {
+                            Spacer()
                             ExtractedView(text: "Antiguo Testamento")
                         }
                         Label(bookName.capitalized, systemImage: "book")
@@ -54,6 +64,10 @@ struct MenuList: View {
                                 }
                                 bookSelected = libro
                             }
+                        
+                        if bookName.lowercased() == "apocalipsis" {
+                            Spacer()
+                        }
                     }
                 } else {
                     Text("Cargando libros...").padding()
@@ -83,17 +97,18 @@ struct ExtractedView: View {
                 .bold()
             Rectangle()
                 .fill(LinearGradient(
-                    gradient: Gradient(colors: [Color.blue, Color.purple]),
+                    gradient: Gradient(colors: [Color.blue, Color.gray]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 ))
-                .frame(height: 5)
-                .padding(.vertical, 4)
+                .frame(height: 1)
+                .padding(.vertical, 2)
         }
     }
 }
 
 
 #Preview {
-    MenuList(showMenu: .constant(true), bookSelected: .constant("") )
+    //MenuList(showMenu: .constant(true), bookSelected: .constant("") )
+    SideMenuView(showMenu: .constant(true), selectedTab: .constant(0))
 }

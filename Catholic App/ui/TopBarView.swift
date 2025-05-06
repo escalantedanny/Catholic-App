@@ -19,9 +19,8 @@ struct BasicTopBarView: View {
             }
         }
         .padding(.horizontal)
-        .padding(.top, 10) // si quieres espacio desde el top
-        .foregroundColor(.white) // blanco si la imagen es oscura
-        // Sin .background ni .frame fijo
+        .padding(.top, 10)
+        .foregroundColor(.white)
     }
 }
 

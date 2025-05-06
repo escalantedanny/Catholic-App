@@ -26,11 +26,11 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
 func topBarView(for tab: Int, showMenu: Binding<Bool>) -> some View {
 
     switch tab {
-    case 0, 3, 4:
-        BasicTopBarView(showMenu: showMenu)
-    case 1, 2:
-        DetailTopBarMenu(showMenu: showMenu)
-    default:
-        BasicTopBarView(showMenu: showMenu)
+        case 0, 3, 4:
+            BasicTopBarView(showMenu: showMenu)
+        case 1, 2:
+            DetailTopBarMenu(showMenu: showMenu)
+        default:
+            BasicTopBarView(showMenu: showMenu)
     }
 }

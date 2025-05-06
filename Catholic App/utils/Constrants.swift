@@ -15,6 +15,10 @@ struct Constants {
         static let home = "house"
         static let gear = "gear"
         static let profile = "person.circle"
+        static let tips = "💡"
+        static let rosario = "📿"
+        static let letanias = "🙏"
+        static let howPray = "📖"
     }
 
     struct Colors {
@@ -29,11 +33,18 @@ struct Constants {
     
     struct keys {
         static let list = [
-            ("Favoritos", "star.fill"),
-            ("Descargas", "arrow.down.circle"),
-            ("Rutinas", "figure.walk"),
-            ("Configuración", "gear")
+            ("Favoritos", "⭐"),
+            ("Descargas", "📥"),
+            ("Rutinas", "🏃"),
+            ("Configuración", "⚙️")
         ]
+    }
+    
+    struct labels {
+        static let Tip = "Tips"
+        static let Rosary = "Rosario"
+        static let Letanies = "Letanias"
+        static let HowPray = "Como podré Orar?"
     }
     
 }
