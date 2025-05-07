@@ -3,7 +3,7 @@ import CacheManager
 
 struct SearchingBibleView: View {
     
-    @State private var text: String = "lazaro"
+    @State private var text: String = ""
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
     
     let popularSearches = ["Amor", "Fe", "Esperanza", "Lázaro", "María", "Pecado", "Dios"]
@@ -15,8 +15,15 @@ struct SearchingBibleView: View {
                     .padding()
                     .background(Color.gray.opacity(0.2))
                     .cornerRadius(10)
+                
                 Image(systemName: "magnifyingglass")
                     .padding(.trailing)
+                    .onTapGesture {
+                        viewModel.versiculos.removeAll()
+                        Task {
+                            await viewModel.searchVersicle(query: text)
+                        }
+                    }
             }
             .padding()
             
@@ -28,13 +35,16 @@ struct SearchingBibleView: View {
                                 .padding()
                                 .onTapGesture {
                                     text = search
+                                    viewModel.versiculos.removeAll()
                                     Task {
                                         await viewModel.searchVersicle(query: search)
                                     }
                                 }
                         }
                     }
-                } else {
+                }
+                
+                if !viewModel.versiculos.isEmpty {
                     Section(header: Text("Resultados")) {
                         ForEach(viewModel.versiculos, id: \.self) { versiculo in
                             VStack(alignment: .leading, spacing: 4) {
