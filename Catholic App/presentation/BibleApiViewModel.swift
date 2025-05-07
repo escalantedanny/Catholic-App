@@ -5,6 +5,7 @@ import Combine
 class BibleApiViewModel: ObservableObject {
     
     @Published var versiculo: Versiculo?
+    @Published var versiculos: [Versiculo] = []
     @Published var books: [String] = []
     @Published var book: BookResponse?
     @Published var chapter: ChapterResponse?
@@ -142,4 +143,39 @@ class BibleApiViewModel: ObservableObject {
 
         print("Favoritos actuales:", favoritos)
     }
+    
+    @MainActor
+    func searchVersicle(query: String, retryCount: Int = 3) async {
+        
+        guard var urlComponents = URLComponents(string: Constants.urls.search) else {
+            print("❌ URL inválida")
+            return
+        }
+
+        urlComponents.queryItems = [URLQueryItem(name: "q", value: query)]
+        
+        guard let url = urlComponents.url else {
+            print("❌ No se pudo construir la URL con query")
+            return
+        }
+
+        for attempt in 1...retryCount {
+            do {
+                let (data, _) = try await session.data(from: url)
+                print("🛰️ Request de búsqueda: \(url.absoluteString)")
+                print("📦 Resultado búsqueda: \(String(data: data, encoding: .utf8) ?? "Invalid UTF8")")
+                let resultado = try JSONDecoder().decode([Versiculo].self, from: data) // <-- nota: lista
+                DispatchQueue.main.async {
+                    self.versiculos = resultado
+                }
+                return
+            } catch {
+                print("❌ Error en búsqueda intento \(attempt): \(error.localizedDescription)")
+                if attempt < retryCount {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                }
+            }
+        }
+    }
+    
 }

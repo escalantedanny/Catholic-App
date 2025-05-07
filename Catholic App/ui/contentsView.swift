@@ -8,7 +8,7 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
         case 0:
             ShowBodyView()
         case 1:
-            DetailBookView(bookSelected: bookSelected)
+            SearchingBibleView()
         case 2:
             DetailBookView(bookSelected: bookSelected)
         case 3:
@@ -19,7 +19,6 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
             ShowBodyView()
     }
 }
-
 
 struct TopBarView: View {
     @Binding var showMenu: Bool

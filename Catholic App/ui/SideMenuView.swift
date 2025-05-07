@@ -109,6 +109,6 @@ struct ExtractedView: View {
 
 
 #Preview {
-    //MenuList(showMenu: .constant(true), bookSelected: .constant("") )
-    SideMenuView(showMenu: .constant(true), selectedTab: .constant(0))
+    MenuList(showMenu: .constant(true), bookSelected: .constant("") )
+    //SideMenuView(showMenu: .constant(true), selectedTab: .constant(0))
 }

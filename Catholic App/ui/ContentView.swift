@@ -6,22 +6,21 @@ struct ContentView: View {
     @State private var showMenu = false
     @State private var selectedTab: Int = 0
     @State private var viewID = UUID()
-    @State private var bookSelected: String = ""
+    @State private var bookSelected: String = "genesis"
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .leading) {
                 VStack(spacing: 0) {
 
-                    if selectedTab == 0 || selectedTab == 1 || selectedTab == 4 {
-                        TopBarView(showMenu: $showMenu)
-                            .background(Color.gray)
-                    }
-                    
+                    TopBarView(showMenu: $showMenu)
+                        .background(Color.gray)
+
                     contentView(for: selectedTab, bookSelected: bookSelected)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 
                     BottomBarView(selectedTab: $selectedTab)
+                    
                 }
                 .disabled(showMenu)
 
