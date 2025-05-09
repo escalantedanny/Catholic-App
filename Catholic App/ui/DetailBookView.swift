@@ -51,10 +51,15 @@ struct ChapterDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 if let chapterData = viewModel.chapter {
-                    Text("\(libro.uppercased()) Capítulo \(chapter)")
-                        .font(.title)
-                        .padding(.bottom)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                    VStack {
+                        Text(libro.uppercased())
+                            .font(.title)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        Text(" Capítulo \(chapter)")
+                            .font(.caption)
+                            .padding(.bottom)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
 
                     ForEach(chapterData.verses.sorted(by: { Int($0.key)! < Int($1.key)! }), id: \.key) { key, verse in
                         HStack(alignment: .top) {
