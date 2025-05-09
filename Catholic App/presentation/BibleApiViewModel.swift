@@ -22,6 +22,28 @@ class BibleApiViewModel: ObservableObject {
     }
     
     @MainActor
+    func checkHealth(retryCount: Int = 3) async {
+        guard let url = URL(string: Constants.urls.checkHealth ) else { return }
+        
+        for attempt in 1...retryCount {
+            do {
+                let (data, _) = try await session.data(from: url)
+                print("🛰️ Requesting versículo from \(url.absoluteString)")
+                print("📦 Data received: \(String(data: data, encoding: .utf8) ?? "Invalid UTF8")")
+                let response = try JSONDecoder().decode(APIResponse.self, from: data)
+                print("✅ response recibido: \(response)")
+
+                return
+            } catch {
+                print("❌ Error intento \(attempt): \(error.localizedDescription)")
+                if attempt < retryCount {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                }
+            }
+        }
+    }
+    
+    @MainActor
     func fetchRandomVersicle(retryCount: Int = 3) async {
         guard let url = URL(string: Constants.urls.randomVersicles ) else { return }
 
@@ -141,6 +163,35 @@ class BibleApiViewModel: ObservableObject {
             print("⚠️ El versículo ya está en favoritos.")
         }
 
+        print("Favoritos actuales:", favoritos)
+    }
+    
+    func isFavorite(_ versiculo: Versiculo) -> Bool {
+        let favoritos: [Versiculo] = cache.get(forKey: "FAVORITE_LIST") ?? []
+        return favoritos.contains(where: {
+            $0.libro == versiculo.libro &&
+            $0.capitulo == versiculo.capitulo &&
+            $0.versiculo == versiculo.versiculo
+        })
+    }
+    
+    @MainActor
+    func deleteFavoriteVersicle(versiculo: Versiculo) {
+        var favoritos: [Versiculo] = self.cache.get(forKey: "FAVORITE_LIST") ?? []
+        
+        if let index = favoritos.firstIndex(where: {
+            $0.libro == versiculo.libro &&
+            $0.capitulo == versiculo.capitulo &&
+            $0.versiculo == versiculo.versiculo
+        }) {
+            favoritos.remove(at: index)
+            print("🗑️ Versículo eliminado de favoritos.")
+        } else {
+            favoritos.append(versiculo)
+            print("✅ Versículo guardado en favoritos.")
+        }
+        
+        self.cache.save(favoritos, forKey: "FAVORITE_LIST", expiration: .never)
         print("Favoritos actuales:", favoritos)
     }
     

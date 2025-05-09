@@ -49,12 +49,17 @@ struct ShowBodyView: View {
                                     .padding()
                             }
                             .contextMenu {
-                                Button {
-                                    viewModel.saveFavoriteVersicle(versiculo:versiculo)
-                                } label : {
-                                    HStack {
-                                        Text("Agregar a Favoritos")
-                                        Image(systemName: "star.fill")
+                                if viewModel.isFavorite(versiculo) {
+                                    Button {
+                                        viewModel.deleteFavoriteVersicle(versiculo: versiculo)
+                                    } label: {
+                                        Label("Eliminar de Favoritos", systemImage: "star.slash.fill")
+                                    }
+                                } else {
+                                    Button {
+                                        viewModel.saveFavoriteVersicle(versiculo: versiculo)
+                                    } label: {
+                                        Label("Agregar a Favoritos", systemImage: "star.fill")
                                     }
                                 }
                             }

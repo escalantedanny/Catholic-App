@@ -3,6 +3,7 @@ struct Constants {
         static let appName = "Catholic App"
         static let home = "Inicio"
         static let search = "Busqueda"
+        static let searching = "Buscando"
         static let menu = "Menu"
         static let profile = "Perfil"
         static let settings = "Configuración"
@@ -26,6 +27,7 @@ struct Constants {
     }
     
     struct urls {
+        static let checkHealth = "https://bible-api-a2sa.onrender.com/libros/ping"
         static let randomVersicles = "https://bible-api-a2sa.onrender.com/libros/versiculos/aleatorios"
         static let books = "https://bible-api-a2sa.onrender.com/libros"
         static let detailBook = "https://bible-api-a2sa.onrender.com/libros/genesis/capitulos/3"

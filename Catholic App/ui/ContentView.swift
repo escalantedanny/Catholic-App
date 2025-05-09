@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var selectedTab: Int = 0
     @State private var viewID = UUID()
     @State private var bookSelected: String = "genesis"
+    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
     
     var body: some View {
         NavigationStack {
@@ -23,6 +24,11 @@ struct ContentView: View {
                     
                 }
                 .disabled(showMenu)
+                .onAppear() {
+                    Task {
+                        await viewModel.checkHealth()
+                    }
+                }
 
                 if showMenu {
                     Color.black.opacity(0.3)
