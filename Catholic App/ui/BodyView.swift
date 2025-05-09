@@ -3,7 +3,11 @@ import CacheManager
 
 struct ShowBodyView: View {
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
-
+    @State private var navigateToFavorites = false
+    @State private var navigateToChapter = false
+    @State private var selectedChapter: Int?
+    @State private var selectedBook: String?
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -20,6 +24,9 @@ struct ShowBodyView: View {
                             ForEach(Constants.keys.list, id: \.0) { item in
                                 Button(action: {
                                     print("Botón \(item.0) presionado")
+                                    if item.0 == "Favoritos" {
+                                        navigateToFavorites = true
+                                    }
                                 }) {
                                     VStack {
                                         Text(item.1)
@@ -38,6 +45,9 @@ struct ShowBodyView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
+                    .navigationDestination(isPresented: $navigateToFavorites) {
+                        FavoriteVersesView()
+                    }
                     
                     if let versiculo = viewModel.versiculo {
                             VStack {
@@ -47,13 +57,32 @@ struct ShowBodyView: View {
                                 
                                 Text(versiculo.texto)
                                     .padding()
+                                
+                                NavigationLink(
+                                    destination: selectedBook.flatMap { book in
+                                        selectedChapter.map { chapter in
+                                            ChapterDetailView(libro: book, chapter: chapter)
+                                        }
+                                    },
+                                    isActive: $navigateToChapter,
+                                    label: { EmptyView() }
+                                )
+                                .hidden()
+                                
                             }
                             .contextMenu {
+                                Button {
+                                    selectedChapter = Int(versiculo.capitulo)
+                                    selectedBook = versiculo.libro
+                                    navigateToChapter = true
+                                } label: {
+                                    Label("Ir al capitulo", systemImage: "arrowshape.turn.up.right.fill")
+                                }
                                 if viewModel.isFavorite(versiculo) {
                                     Button {
                                         viewModel.deleteFavoriteVersicle(versiculo: versiculo)
                                     } label: {
-                                        Label("Eliminar de Favoritos", systemImage: "star.slash.fill")
+                                        Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
                                     }
                                 } else {
                                     Button {

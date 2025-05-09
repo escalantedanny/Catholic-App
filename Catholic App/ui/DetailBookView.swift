@@ -21,7 +21,7 @@ struct DetailBookView: View {
                     ScrollView {
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 12) {
                             ForEach(1...book.ctd_chapters, id: \.self) { chapter in
-                                NavigationLink(destination: ChapterView(libro: bookSelected, chapter: chapter)){
+                                NavigationLink(destination: ChapterDetailView(libro: bookSelected, chapter: chapter)){
                                     Text("\(chapter)")
                                         .frame(maxWidth: .infinity, minHeight: 44)
                                         .background(Color.blue.opacity(0.2))
@@ -42,7 +42,7 @@ struct DetailBookView: View {
     }
 }
 
-struct ChapterView: View {
+struct ChapterDetailView: View {
     let libro: String
     let chapter: Int
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
@@ -51,9 +51,10 @@ struct ChapterView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 if let chapterData = viewModel.chapter {
-                    Text("Capítulo \(chapter)")
+                    Text("\(libro.uppercased()) Capítulo \(chapter)")
                         .font(.title)
                         .padding(.bottom)
+                        .frame(maxWidth: .infinity, alignment: .center)
 
                     ForEach(chapterData.verses.sorted(by: { Int($0.key)! < Int($1.key)! }), id: \.key) { key, verse in
                         HStack(alignment: .top) {

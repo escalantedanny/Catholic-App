@@ -229,4 +229,8 @@ class BibleApiViewModel: ObservableObject {
         }
     }
     
+    func getFavoriteVerses() -> [Versiculo] {
+        return cache.get(forKey: "FAVORITE_LIST") ?? []
+    }
+    
 }
