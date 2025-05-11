@@ -84,6 +84,7 @@ struct RosarioView: View {
             }
             .padding()
         }
+        .background(Color(.systemBackground))
     }
 
     // Helper function to create bullet points
@@ -98,4 +99,6 @@ struct RosarioView: View {
 
 #Preview {
     RosarioView()
+        .environment(\.colorScheme, .dark)
+
 }

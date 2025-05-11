@@ -33,9 +33,9 @@ struct ShowBodyView: View {
                                             .font(.system(size: 30))
                                         Text(item.0)
                                             .font(.caption)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.primary )
                                     }
-                                    .frame(width: 80, height: 80)
+                                        .frame(width: 80, height: 80)
                                     .background(Color.blue.opacity(0.2))
                                     .cornerRadius(16)
                                 }
@@ -43,6 +43,7 @@ struct ShowBodyView: View {
                         }
                         .padding(.horizontal)
                     }
+                    .background(Color(.systemBackground))
                     .frame(maxWidth: .infinity)
                     .padding()
                     .navigationDestination(isPresented: $navigateToFavorites) {
@@ -92,6 +93,7 @@ struct ShowBodyView: View {
                                     }
                                 }
                             }
+                            .background(Color(.systemBackground))
                     } else {
                         Text("Cargando...!")
                             .padding()
@@ -102,11 +104,11 @@ struct ShowBodyView: View {
                             NavigationLink(destination: TipsView()) {
                                 MenuItem(icon: Constants.Icons.tips, title: Constants.labels.Tip)
                             }
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                             NavigationLink(destination: RosarioView()) {
                                 MenuItem(icon: Constants.Icons.rosario, title: Constants.labels.Rosary)
                             }
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                         
@@ -114,17 +116,18 @@ struct ShowBodyView: View {
                             NavigationLink(destination: LetaniasView()) {
                                 MenuItem(icon: Constants.Icons.letanias, title: Constants.labels.Letanies)
                             }
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                             NavigationLink(destination: HowToPrayView()) {
                                 MenuItem(icon: Constants.Icons.howPray, title: Constants.labels.HowPray)
                             }
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                         }
                         .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .padding()
                     .cornerRadius(16)
-                    
+                    .background(Color(.systemBackground))
+
                     Spacer()
                 }
                 .onAppear {
@@ -158,9 +161,12 @@ struct MenuItem: View {
         .frame(width: 160, height: 80, alignment: .center)
         .background(Color.blue.opacity(0.2))
         .cornerRadius(16)
+        .background(Color(.systemBackground))
     }
 }
 
 #Preview {
     ShowBodyView()
+        .environment(\.colorScheme, .dark)
+
 }

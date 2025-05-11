@@ -43,6 +43,7 @@ struct TipsView: View {
             }
             .padding()
         }
+        .background(Color(.systemBackground))
     }
 }
 
@@ -54,14 +55,16 @@ struct TipView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(.headline)
-                .foregroundColor(.blue)
+                .bold()
             Text(content)
                 .font(.body)
                 .foregroundColor(.primary)
         }
+
     }
 }
 
 #Preview {
     TipsView()
+        .environment(\.colorScheme, .dark)
 }

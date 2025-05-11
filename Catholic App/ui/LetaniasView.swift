@@ -38,11 +38,14 @@ struct LetaniasView: View {
                         .italic()
                 }
             }
-            .padding()
+            .padding(.horizontal, 16)
         }
+        .background(Color(.systemBackground))
     }
 }
 
 #Preview {
     LetaniasView()
+        .environment(\.colorScheme, .dark)
+
 }

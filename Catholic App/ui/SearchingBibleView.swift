@@ -116,4 +116,5 @@ struct SearchingBibleView: View {
 
 #Preview {
     SearchingBibleView()
+        .environment(\.colorScheme, .dark)
 }

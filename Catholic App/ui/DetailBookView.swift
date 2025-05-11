@@ -23,10 +23,12 @@ struct DetailBookView: View {
                             ForEach(1...book.ctd_chapters, id: \.self) { chapter in
                                 NavigationLink(destination: ChapterDetailView(libro: bookSelected, chapter: chapter)){
                                     Text("\(chapter)")
+                                        .font(.system(.title2))
                                         .frame(maxWidth: .infinity, minHeight: 44)
-                                        .background(Color.blue.opacity(0.2))
-                                        .foregroundColor(.black)
+                                        .background(Color(.tertiarySystemFill))
+                                        .foregroundColor(.primary)
                                         .cornerRadius(8)
+                                        .bold()
                                 }
                             }
                         }
@@ -68,8 +70,12 @@ struct ChapterDetailView: View {
                                 .frame(width: 30, alignment: .leading)
                             Text(verse)
                                 .multilineTextAlignment(.leading)
+                                .bold()
                         }
                         .padding(16)
+                        .background(Color(.systemBackground))
+                        .cornerRadius(10)
+                        .shadow(color: Color.primary.opacity(0.1), radius: 2)
                         .contextMenu {
                             let versiculo = Versiculo(
                                 libro: libro,
@@ -101,6 +107,7 @@ struct ChapterDetailView: View {
 
 #Preview {
     NavigationStack {
-        DetailBookView(bookSelected: "oseas")
+        DetailBookView(bookSelected: "juan")
     }
+    //.environment(\.colorScheme, .dark)
 }

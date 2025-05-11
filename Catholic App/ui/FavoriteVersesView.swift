@@ -40,10 +40,12 @@ struct FavoriteVersesView: View {
                 }
             }
         }
+        .background(Color(.systemBackground))
         .onAppear {
             loadFavorites()
         }
     }
+
 
     private func loadFavorites() {
         favoritos = viewModel.getFavoriteVerses()
@@ -52,4 +54,5 @@ struct FavoriteVersesView: View {
 
 #Preview {
     FavoriteVersesView()
+        .environment(\.colorScheme, .dark)
 }

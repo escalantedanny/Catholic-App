@@ -100,4 +100,5 @@ struct TopBarView: View {
 
 #Preview {
     ContentView()
+        .environment(\.colorScheme, .dark)
 }

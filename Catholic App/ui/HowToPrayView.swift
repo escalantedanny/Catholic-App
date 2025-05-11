@@ -23,9 +23,11 @@ struct HowToPrayView: View {
             }
             .padding()
         }
+        .background(Color(.systemBackground))
     }
 }
 
 #Preview {
     HowToPrayView()
+        .environment(\.colorScheme, .dark)
 }

@@ -56,7 +56,7 @@ struct BottomBarView: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 32)
-        .background(Color(UIColor.systemGray6))
+        .background(Color(.systemBackground))
     }
 }
 
@@ -78,4 +78,5 @@ struct StatefulPreviewWrapper<Value, Content: View>: View {
     StatefulPreviewWrapper(0) { binding in
         BottomBarView(selectedTab: binding)
     }
+    .environment(\.colorScheme, .dark)
 }

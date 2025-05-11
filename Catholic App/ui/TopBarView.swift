@@ -39,12 +39,13 @@ struct DetailTopBarMenu: View {
                 }
             } label: {
                 Image(systemName: Constants.Icons.menu)
+                    .font(.system(size: 24))
                     .padding()
+                    .bold()
             }
         }
         .padding()
-        .background(Color.white)
-        .foregroundColor(.black)
+        .background(Color(.systemBackground))
         .frame(height: 60)
     }
 }
@@ -52,4 +53,6 @@ struct DetailTopBarMenu: View {
 
 #Preview {
     DetailTopBarMenu(showMenu: .constant(true))
+        .environment(\.colorScheme, .dark)
+
 }

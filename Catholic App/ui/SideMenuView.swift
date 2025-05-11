@@ -31,7 +31,7 @@ struct SideMenuView: View {
         .padding(.horizontal, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(width: 250)
-        .background(Color.white)
+        .background(Color(.systemBackground))
         .edgesIgnoringSafeArea(.all)
     }
 }
@@ -76,6 +76,7 @@ struct MenuList: View {
             .padding(.top, 60)
             .padding(.horizontal, 16)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.systemBackground))
         }
         .frame(width: 250)
         .background(Color.white)
@@ -109,6 +110,9 @@ struct ExtractedView: View {
 
 
 #Preview {
-    MenuList(showMenu: .constant(true), bookSelected: .constant("") )
-    //SideMenuView(showMenu: .constant(true), selectedTab: .constant(0))
+    //MenuList(showMenu: .constant(true), bookSelected: .constant("") )
+    //    .environment(\.colorScheme, .dark)
+
+    SideMenuView(showMenu: .constant(true), selectedTab: .constant(0))
+        .environment(\.colorScheme, .dark)
 }
