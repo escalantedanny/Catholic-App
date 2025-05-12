@@ -18,13 +18,11 @@ struct BasicTopBarView: View {
                     .padding()
             }
         }
-        .padding()
-        .background(Color.white)
-        .foregroundColor(.black)
-        .frame(height: 60)
+        .padding(.horizontal)
+        .padding(.top, 10)
+        .foregroundColor(.blue)
     }
 }
-
 
 struct DetailTopBarMenu: View {
     @Binding var showMenu: Bool
@@ -41,17 +39,20 @@ struct DetailTopBarMenu: View {
                 }
             } label: {
                 Image(systemName: Constants.Icons.menu)
+                    .font(.system(size: 24))
                     .padding()
+                    .bold()
             }
         }
         .padding()
-        .background(Color.white)
-        .foregroundColor(.black)
+        .background(Color(.systemBackground))
         .frame(height: 60)
     }
 }
 
 
 #Preview {
-    BasicTopBarView(showMenu: .constant(true))
+    DetailTopBarMenu(showMenu: .constant(true))
+        .environment(\.colorScheme, .dark)
+
 }

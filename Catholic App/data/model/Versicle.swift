@@ -1,6 +1,6 @@
 import Foundation
 
-struct Versiculo: Codable {
+struct Versiculo: Codable, Hashable {
     let libro: String
     let capitulo: String
     let versiculo: String

@@ -8,7 +8,7 @@ struct BottomBarView: View {
                 selectedTab = 0
             }) {
                 VStack {
-                    Image(systemName: "house.fill")
+                    Image(systemName: selectedTab == 0 ? "house.fill" : "house")
                     Text("Inicio")
                 }
                 .foregroundColor(selectedTab == 0 ? .blue : .gray)
@@ -18,7 +18,7 @@ struct BottomBarView: View {
                 selectedTab = 1
             }) {
                 VStack {
-                    Image(systemName: "magnifyingglass")
+                    Image(systemName: selectedTab == 1 ? "magnifyingglass.circle.fill" : "magnifyingglass.circle")
                     Text("Buscar")
                 }
                 .foregroundColor(selectedTab == 1 ? .blue : .gray)
@@ -28,7 +28,7 @@ struct BottomBarView: View {
                 selectedTab = 2
             }) {
                 VStack {
-                    Image(systemName: "book.fill")
+                    Image(systemName: selectedTab == 2 ? "book.fill" : "book")
                     Text("Biblia")
                 }
                 .foregroundColor(selectedTab == 2 ? .blue : .gray)
@@ -38,8 +38,8 @@ struct BottomBarView: View {
                 selectedTab = 3
             }) {
                 VStack {
-                    Image(systemName: "person.3.fill")
-                    Text("Comunidad")
+                    Image(systemName: selectedTab == 3 ? "book.closed.fill" : "book.closed")
+                    Text("Evangelio")
                 }
                 .foregroundColor(selectedTab == 3 ? .blue : .gray)
             }
@@ -48,15 +48,15 @@ struct BottomBarView: View {
                 selectedTab = 4
             }) {
                 VStack {
-                    Image(systemName: "person.fill")
+                    Image(systemName: selectedTab == 4 ? "person.circle.fill" : "person.circle")
                     Text("Yo")
                 }
                 .foregroundColor(selectedTab == 4 ? .blue : .gray)
             }
         }
-        .padding(.vertical, 16)
+        .padding(.vertical, 8)
         .padding(.horizontal, 32)
-        .background(Color(UIColor.systemGray6))
+        .background(Color(.systemBackground))
     }
 }
 
@@ -78,4 +78,5 @@ struct StatefulPreviewWrapper<Value, Content: View>: View {
     StatefulPreviewWrapper(0) { binding in
         BottomBarView(selectedTab: binding)
     }
+    //.environment(\.colorScheme, .dark)
 }
