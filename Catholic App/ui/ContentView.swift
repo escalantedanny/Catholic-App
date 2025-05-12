@@ -65,7 +65,7 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
         case 2:
             DetailBookView(bookSelected: bookSelected)
         case 3:
-            Text("Próximamente")
+            EvangelioDelDiaView()
         case 4:
             Text("Próximamente")
         default:
@@ -100,5 +100,5 @@ struct TopBarView: View {
 
 #Preview {
     ContentView()
-        .environment(\.colorScheme, .dark)
+       // .environment(\.colorScheme, .dark)
 }

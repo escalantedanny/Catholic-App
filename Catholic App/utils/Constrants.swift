@@ -32,6 +32,7 @@ struct Constants {
         static let books = "https://bible-api-a2sa.onrender.com/libros"
         static let detailBook = "https://bible-api-a2sa.onrender.com/libros/genesis/capitulos/3"
         static let search = "https://bible-api-a2sa.onrender.com/libros/search"
+        static let evangelio = "https://bible-api-a2sa.onrender.com/libros/evangelio"
     }
     
     struct keys {

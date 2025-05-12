@@ -9,6 +9,9 @@ class BibleApiViewModel: ObservableObject {
     @Published var books: [String] = []
     @Published var book: BookResponse?
     @Published var chapter: ChapterResponse?
+    
+    @Published var evangelio: EvangelioResponse?
+    
     private var cancellables = Set<AnyCancellable>()
     private var cache: CacheService
     private var session: URLSession
@@ -46,6 +49,12 @@ class BibleApiViewModel: ObservableObject {
     @MainActor
     func fetchRandomVersicle(retryCount: Int = 3) async {
         guard let url = URL(string: Constants.urls.randomVersicles ) else { return }
+        
+        if let randomVersicle: Versiculo = self.cache.get(forKey: "RANDOM_VERSICLE") {
+            self.versiculo = randomVersicle
+            print("📦 randomVersicle cargados desde caché")
+            return
+        }
 
         for attempt in 1...retryCount {
             do {
@@ -54,7 +63,7 @@ class BibleApiViewModel: ObservableObject {
                 print("📦 Data received: \(String(data: data, encoding: .utf8) ?? "Invalid UTF8")")
                 let versiculo = try JSONDecoder().decode(Versiculo.self, from: data)
                 self.versiculo = versiculo
-                self.cache.save(versiculo, forKey: "VERSICLE", expiration: .never)
+                self.cache.save(versiculo, forKey: "RANDOM_VERSICLE", expiration: .never)
                 print("✅ Versículo recibido: \(versiculo.texto)")
 
                 return
@@ -127,13 +136,22 @@ class BibleApiViewModel: ObservableObject {
     @MainActor
     func fetchDetailBook(libro: String, chapter: Int, retryCount: Int = 3) async {
         guard let url = URL(string: "https://bible-api-a2sa.onrender.com/libros/\(libro)/capitulos/\(chapter)") else { return }
+        
+        let cacheDetailBook = "DETAIL_BOOK_\(libro.uppercased())_\(chapter)"
 
+        if let randomVersicle: ChapterResponse = self.cache.get(forKey: cacheDetailBook) {
+            self.versiculo = randomVersicle
+            print("📦 randomVersicle cargados desde caché")
+            return
+        }
+
+        
         // Intentar descargar si no está en caché
         for attempt in 1...retryCount {
             do {
                 let (data, _) = try await session.data(from: url)
                 let _chapter = try JSONDecoder().decode(ChapterResponse.self, from: data)
-                //self.cache.save(_book, forKey: "BOOK_SELECTED", expiration: .never)
+                self.cache.save(_chapter, forKey: cacheDetailBook, expiration: .never)
                 self.chapter = _chapter
                 print("✅ chapter cargado correctamente")
                 print(_chapter)
@@ -231,6 +249,44 @@ class BibleApiViewModel: ObservableObject {
     
     func getFavoriteVerses() -> [Versiculo] {
         return cache.get(forKey: "FAVORITE_LIST") ?? []
+    }
+    
+    @MainActor
+    func fetchEvangelioDelDia(retryCount: Int = 3) async {
+        guard let url = URL(string: Constants.urls.evangelio) else {
+            print("❌ URL inválida.")
+            return
+        }
+
+        for attempt in 1...retryCount {
+            do {
+                print("🌐 Intento \(attempt): solicitando desde \(url.absoluteString)")
+                let (data, _) = try await session.data(from: url)
+                
+                guard let jsonString = String(data: data, encoding: .utf8) else {
+                    print("⚠️ No se pudo decodificar a UTF8.")
+                    continue
+                }
+
+                print("📦 Datos recibidos:\n\(jsonString)")
+
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let response = try decoder.decode(EvangelioResponse.self, from: data)
+
+                self.evangelio = response
+                print("✅ Evangelio recibido correctamente.")
+                return
+            } catch {
+                print("❌ Error en el intento \(attempt): \(error.localizedDescription)")
+                if attempt < retryCount {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    print("🔁 Reintentando...")
+                } else {
+                    print("🛑 Se agotaron los intentos.")
+                }
+            }
+        }
     }
     
 }
