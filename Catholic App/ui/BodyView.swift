@@ -35,16 +35,17 @@ struct ShowBodyView: View {
                                             .font(.caption)
                                             .foregroundColor(.primary )
                                     }
-                                        .frame(width: 80, height: 80)
+                                    .frame(width: 80, height: 80)
                                     .background(Color.blue.opacity(0.2))
                                     .cornerRadius(16)
                                 }
                             }
                         }
                         .padding(.horizontal)
+                        
                     }
                     .background(Color(.systemBackground))
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
                     .navigationDestination(isPresented: $navigateToFavorites) {
                         FavoriteVersesView()

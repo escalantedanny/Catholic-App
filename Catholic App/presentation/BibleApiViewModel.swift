@@ -120,7 +120,6 @@ class BibleApiViewModel: ObservableObject {
                 let (data, _) = try await session.data(from: url)
                 let _book = try JSONDecoder().decode(BookResponse.self, from: data)
                 self.cache.save(_book, forKey: "BOOK_\(libro.uppercased())", expiration: .never)
-                self.cache.save(_book, forKey: "BOOK_SELECTED", expiration: .never)
                 self.book = _book
                 print("✅ Libro cargado correctamente")
                 return
@@ -137,22 +136,20 @@ class BibleApiViewModel: ObservableObject {
     func fetchDetailBook(libro: String, chapter: Int, retryCount: Int = 3) async {
         guard let url = URL(string: "https://bible-api-a2sa.onrender.com/libros/\(libro)/capitulos/\(chapter)") else { return }
         
-        let cacheDetailBook = "DETAIL_BOOK_\(libro.uppercased())_\(chapter)"
+        let cacheKey = "DETAIL_BOOK_\(libro.uppercased())_\(chapter)"
 
-        if let randomVersicle: ChapterResponse = self.cache.get(forKey: cacheDetailBook) {
-            self.versiculo = randomVersicle
-            print("📦 randomVersicle cargados desde caché")
+        if let randomVersicle: ChapterResponse = self.cache.get(forKey: cacheKey) {
+            self.chapter = randomVersicle
+            print("📦 randomVersicle cargado desde caché")
             return
         }
 
-        
-        // Intentar descargar si no está en caché
         for attempt in 1...retryCount {
             do {
                 let (data, _) = try await session.data(from: url)
                 let _chapter = try JSONDecoder().decode(ChapterResponse.self, from: data)
-                self.cache.save(_chapter, forKey: cacheDetailBook, expiration: .never)
                 self.chapter = _chapter
+                self.cache.save(_chapter, forKey: cacheKey, expiration: .never)
                 print("✅ chapter cargado correctamente")
                 print(_chapter)
                 return
@@ -216,6 +213,14 @@ class BibleApiViewModel: ObservableObject {
     @MainActor
     func searchVersicle(query: String, retryCount: Int = 3) async {
         
+        let cacheKey = "SEARCH_QUERY_\(query.lowercased())"
+        
+        if let cachedResults: [Versiculo] = self.cache.get(forKey: cacheKey) {
+            print("📦 Resultados de búsqueda recuperados desde caché para '\(query)'")
+            self.versiculos = cachedResults
+            return
+        }
+        
         guard var urlComponents = URLComponents(string: Constants.urls.search) else {
             print("❌ URL inválida")
             return
@@ -233,7 +238,8 @@ class BibleApiViewModel: ObservableObject {
                 let (data, _) = try await session.data(from: url)
                 print("🛰️ Request de búsqueda: \(url.absoluteString)")
                 print("📦 Resultado búsqueda: \(String(data: data, encoding: .utf8) ?? "Invalid UTF8")")
-                let resultado = try JSONDecoder().decode([Versiculo].self, from: data) // <-- nota: lista
+                let resultado = try JSONDecoder().decode([Versiculo].self, from: data)
+                self.cache.save(resultado, forKey: cacheKey, expiration: .never)
                 DispatchQueue.main.async {
                     self.versiculos = resultado
                 }
