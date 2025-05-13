@@ -31,6 +31,17 @@ Esta app consume datos de la siguiente API personalizada:
 ![image](https://github.com/user-attachments/assets/b4c3dc8b-3631-4eef-9254-d3292b67fa35)
 ![image](https://github.com/user-attachments/assets/41b8ef48-d063-4ef4-a071-43fc3e1af153)
 
+---
 
+## 🙏 Inspiración
+
+“La fe viene de la predicación, y la predicación, por la palabra de Cristo.”
+Romanos 10:17
+
+---
+
+## 📜 Licencia
+
+MIT © Danny Escalante
 
 
