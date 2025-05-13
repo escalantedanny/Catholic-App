@@ -38,9 +38,9 @@ struct Constants {
     struct keys {
         static let list = [
             ("Favoritos", "⭐"),
-            ("Descargas", "📥"),
             ("Rutinas", "🏃"),
-            ("Configuración", "⚙️")
+            ("Rosario", "📿"),
+            ("Orar", "📖")
         ]
     }
     
