@@ -16,25 +16,23 @@ struct DetailBookView: View {
 
             if let book = viewModel.book {
                 NavigationStack {
+                    Text("\(bookSelected.capitalized)")
+                        .font(.system(.largeTitle, design: .rounded))
                     ScrollView {
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 12) {
                             ForEach(1...book.ctd_chapters, id: \.self) { chapter in
-                                Button(action: {
-                                    print("Capítulo seleccionado: \(chapter)")
-                                    Task {
-                                        await viewModel.fetchDetailBook(libro: bookSelected, chapter: chapter)
-                                    }
-                                }) {
+                                NavigationLink(destination: ChapterDetailView(libro: bookSelected, chapter: chapter)){
                                     Text("\(chapter)")
+                                        .font(.system(.title2))
                                         .frame(maxWidth: .infinity, minHeight: 44)
-                                        .background(Color.blue.opacity(0.2))
-                                        .foregroundColor(.black)
+                                        .background(Color(.tertiarySystemFill))
+                                        .foregroundColor(.primary)
                                         .cornerRadius(8)
+                                        .bold()
                                 }
                             }
                         }
                         .padding(.horizontal, 16)
-                        .navigationTitle(Text(bookSelected.capitalized))
                         .navigationBarTitleDisplayMode(.automatic)
                     }
                 }
@@ -46,37 +44,70 @@ struct DetailBookView: View {
     }
 }
 
-struct ChapterView: View {
-    let chapter: ChapterResponse
-    
+struct ChapterDetailView: View {
+    let libro: String
+    let chapter: Int
+    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Capítulo \(chapter.chapter)")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 10)
-
-                ForEach(sortedVerses(), id: \.0) { number, text in
-                    VStack(alignment: .leading) {
-                        Text("\(number). \(text)")
-                            .font(.body)
-                            .foregroundColor(.primary)
-                            .padding(.vertical, 4)
+                if let chapterData = viewModel.chapter {
+                    VStack {
+                        Text(libro.uppercased())
+                            .font(.title)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        Text(" Capítulo \(chapter)")
+                            .font(.caption)
+                            .padding(.bottom)
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
+
+                    ForEach(chapterData.verses.sorted(by: { Int($0.key)! < Int($1.key)! }), id: \.key) { key, verse in
+                        HStack(alignment: .top) {
+                            Text("\(key)")
+                                .fontWeight(.bold)
+                                .frame(width: 30, alignment: .leading)
+                            Text(verse)
+                                .multilineTextAlignment(.leading)
+                                .bold()
+                        }
+                        .padding(16)
+                        .background(Color(.systemBackground))
+                        .cornerRadius(10)
+                        .shadow(color: Color.primary.opacity(0.1), radius: 2)
+                        .contextMenu {
+                            let versiculo = Versiculo(
+                                libro: libro,
+                                capitulo: String(chapter),
+                                versiculo: key,
+                                texto: verse
+                            )
+                            Button {
+                                viewModel.saveFavoriteVersicle(versiculo:versiculo)
+                            } label : {
+                                HStack {
+                                    Text("Agregar a Favoritos")
+                                    Image(systemName: "star.fill")
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    ProgressView("Cargando capítulo...")
                 }
             }
             .padding()
         }
-    }
-    
-    private func sortedVerses() -> [(String, String)] {
-        chapter.verses.sorted { Int($0.key)! < Int($1.key)! }
+        .task {
+            await viewModel.fetchDetailBook(libro: libro, chapter: chapter)
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        DetailBookView(bookSelected: "salmos")
+        DetailBookView(bookSelected: "juan")
     }
+    //.environment(\.colorScheme, .dark)
 }
