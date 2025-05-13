@@ -9,7 +9,6 @@ class BibleApiViewModel: ObservableObject {
     @Published var books: [String] = []
     @Published var book: BookResponse?
     @Published var chapter: ChapterResponse?
-    
     @Published var evangelio: EvangelioResponse?
     
     private var cancellables = Set<AnyCancellable>()
@@ -63,7 +62,7 @@ class BibleApiViewModel: ObservableObject {
                 print("📦 Data received: \(String(data: data, encoding: .utf8) ?? "Invalid UTF8")")
                 let versiculo = try JSONDecoder().decode(Versiculo.self, from: data)
                 self.versiculo = versiculo
-                self.cache.save(versiculo, forKey: "RANDOM_VERSICLE", expiration: .never)
+                self.cache.save(versiculo, forKey: "RANDOM_VERSICLE", expiration: .hours(24))
                 print("✅ Versículo recibido: \(versiculo.texto)")
 
                 return
