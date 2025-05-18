@@ -38,7 +38,7 @@ struct ContentView: View {
                                 showMenu = false
                             }
                         }
-                    if selectedTab == 0 || selectedTab == 3 || selectedTab == 4 {
+                    if selectedTab == 0 || selectedTab == 3 || selectedTab == 4 || selectedTab == 1 {
                         SideMenuView(showMenu: $showMenu, selectedTab: $selectedTab)
                             .transition(.move(edge: .leading))
                             .zIndex(1)
@@ -67,7 +67,7 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
         case 3:
             EvangelioDelDiaView()
         case 4:
-            Text("Próximamente")
+            Text("Soon!")
         default:
             ShowBodyView()
     }

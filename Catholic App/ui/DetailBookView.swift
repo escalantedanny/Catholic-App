@@ -23,7 +23,7 @@ struct DetailBookView: View {
                             ForEach(1...book.ctd_chapters, id: \.self) { chapter in
                                 NavigationLink(destination: ChapterDetailView(libro: bookSelected, chapter: chapter)){
                                     Text("\(chapter)")
-                                        .font(.system(.title2))
+                                        .font(.system(.title3, design: .rounded))
                                         .frame(maxWidth: .infinity, minHeight: 44)
                                         .background(Color(.tertiarySystemFill))
                                         .foregroundColor(.primary)

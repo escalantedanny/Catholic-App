@@ -20,7 +20,7 @@ struct ShowBodyView: View {
                         .clipped()
                     
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
+                        HStack() {
                             ForEach(Constants.keys.list, id: \.0) { item in
                                 Button(action: {
                                     print("Botón \(item.0) presionado")
@@ -30,14 +30,14 @@ struct ShowBodyView: View {
                                 }) {
                                     VStack {
                                         Text(item.1)
-                                            .font(.system(size: 30))
+                                            .font(.system(size: 48))
                                         Text(item.0)
                                             .font(.caption)
                                             .foregroundColor(.primary )
                                     }
-                                    .frame(width: 80, height: 80)
+                                    .frame(width: 120, height: 120)
                                     .background(Color.blue.opacity(0.2))
-                                    .cornerRadius(16)
+                                    .cornerRadius(25)
                                 }
                             }
                         }
@@ -53,12 +53,22 @@ struct ShowBodyView: View {
                     
                     if let versiculo = viewModel.versiculo {
                             VStack {
-                                Text("\(versiculo.libro.localizedUppercase) \(versiculo.capitulo), \(versiculo.versiculo)")
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    .bold()
-                                
                                 Text(versiculo.texto)
-                                    .padding()
+                                    .font(.system(.callout, design: .rounded))
+                                    .padding(.horizontal)
+                                    .padding(.top)
+                                    .multilineTextAlignment(.leading)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .bold()
+
+                                Text("\(versiculo.libro.localizedUppercase) \(versiculo.capitulo), \(versiculo.versiculo)")
+                                    .font(.system(.caption, design: .rounded))
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal)
+                                    .padding(.top, 4)
+                                    .padding(.bottom, 16)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .bold()
                                 
                                 NavigationLink(
                                     destination: selectedBook.flatMap { book in
@@ -72,6 +82,11 @@ struct ShowBodyView: View {
                                 .hidden()
                                 
                             }
+                            .frame(alignment: .leading)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(25)
+                            .padding(.horizontal)
+                            .padding(.bottom, 16)
                             .contextMenu {
                                 Button {
                                     selectedChapter = Int(versiculo.capitulo)
@@ -100,8 +115,8 @@ struct ShowBodyView: View {
                             .padding()
                     }
                     
-                    VStack(alignment: .center) {
-                        HStack(spacing: 16) {
+                    VStack() {
+                        HStack() {
                             NavigationLink(destination: TipsView()) {
                                 MenuItem(icon: Constants.Icons.tips, title: Constants.labels.Tip)
                             }
@@ -111,9 +126,8 @@ struct ShowBodyView: View {
                             }
                             .foregroundColor(.primary)
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
                         
-                        HStack(spacing: 16) {
+                        HStack() {
                             NavigationLink(destination: LetaniasView()) {
                                 MenuItem(icon: Constants.Icons.letanias, title: Constants.labels.Letanies)
                             }
@@ -123,13 +137,10 @@ struct ShowBodyView: View {
                             }
                             .foregroundColor(.primary)
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .cornerRadius(16)
                     .background(Color(.systemBackground))
-
-                    Spacer()
                 }
                 .onAppear {
                     Task {
@@ -168,6 +179,6 @@ struct MenuItem: View {
 
 #Preview {
     ShowBodyView()
-        .environment(\.colorScheme, .dark)
+        //.environment(\.colorScheme, .dark)
 
 }
