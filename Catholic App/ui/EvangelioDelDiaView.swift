@@ -9,8 +9,25 @@ struct EvangelioDelDiaView: View {
             VStack(alignment: .leading, spacing: 24) {
                 if let evangelio = viewModel.evangelio {
                     SeccionEvangelio(titulo: "📖 Primera Lectura", contenido: evangelio.liturgiaDeLaPalabra)
-                    SeccionEvangelio(titulo: "🎶 Salmo Responsorial", contenido: cutBefore(palabra: "ACLAMACIÓN", en: evangelio.salmo))
-                    SeccionEvangelio(titulo: "📜 Evangelio", contenido: evangelio.evangelio)
+
+                    // Procesar el salmo
+                    let contenido = evangelio.salmo
+                    if let indiceLectura = contenido.firstIndex(where: { $0.uppercased().contains("SEGUNDA LECTURA") }) {
+                        let salmo = Array(contenido[..<indiceLectura])
+                        let segundaLectura = Array(contenido[indiceLectura...])
+
+                        if !salmo.isEmpty {
+                            SeccionEvangelio(titulo: "🎶 Salmo Responsorial", contenido: cutBefore(palabra: "ACLAMACIÓN", en: salmo))
+                        }
+
+                        if !segundaLectura.isEmpty {
+                            SeccionEvangelio(titulo: "📘 Segunda Lectura", contenido: cutBefore(palabra: "ACLAMACIÓN", en: segundaLectura))
+                        }
+                    } else if !contenido.isEmpty {
+                        SeccionEvangelio(titulo: "🎶 Salmo Responsorial", contenido: contenido)
+                    }
+
+                    SeccionEvangelio(titulo: "📜 Evangelio", contenido: cutBefore(palabra: "Credo", en: evangelio.evangelio))
                 } else {
                     ProgressView("Cargando evangelio del día...")
                         .padding()
