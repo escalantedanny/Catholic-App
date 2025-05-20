@@ -7,6 +7,7 @@ struct ShowBodyView: View {
     @State private var navigateToChapter = false
     @State private var selectedChapter: Int?
     @State private var selectedBook: String?
+    @State private var navigationPath = NavigationPath()
     
     var body: some View {
         NavigationStack {
@@ -70,23 +71,24 @@ struct ShowBodyView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .bold()
                                 
-                                NavigationLink(
-                                    destination: selectedBook.flatMap { book in
-                                        selectedChapter.map { chapter in
-                                            ChapterDetailView(libro: book, chapter: chapter)
-                                        }
-                                    },
-                                    isActive: $navigateToChapter,
-                                    label: { EmptyView() }
-                                )
-                                .hidden()
-                                
                             }
                             .frame(alignment: .leading)
                             .background(Color.gray.opacity(0.1))
                             .cornerRadius(25)
                             .padding(.horizontal)
                             .padding(.bottom, 16)
+                            .navigationDestination(
+                                isPresented: $navigateToChapter,
+                                destination: {
+                                    selectedBook.flatMap { book in
+                                        selectedChapter.map { chapter in
+                                            ChapterDetailView(
+                                                navigationPath: $navigationPath,
+                                                nav: ChapterNavigation(book: book, chapter: chapter)
+                                            )
+                                        }
+                                    }
+                                })
                             .contextMenu {
                                 Button {
                                     selectedChapter = Int(versiculo.capitulo)

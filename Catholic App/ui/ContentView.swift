@@ -63,7 +63,7 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
         case 1:
             SearchingBibleView()
         case 2:
-            DetailBookView(bookSelected: bookSelected)
+            DetailBookChaptersView(bookSelected: bookSelected)
         case 3:
             EvangelioDelDiaView()
         case 4:

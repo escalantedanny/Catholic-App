@@ -1,0 +1,120 @@
+import SwiftUI
+import CacheManager
+
+struct ChapterDetailView: View {
+    @Binding var navigationPath: NavigationPath
+    let nav: ChapterNavigation
+
+    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading) {
+                if let chapterData = viewModel.chapter {
+                    VStack {
+                        Text(nav.book.uppercased())
+                            .font(.title)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        Text(" Capítulo \(nav.chapter)")
+                            .font(.caption)
+                            .padding(.bottom)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+
+                    let sortedVerses = chapterData.verses.sorted { Int($0.key)! < Int($1.key)! }
+                    let beforeChapter = nav.chapter - 1
+                    let afterChapter = nav.chapter + 1
+
+                    ForEach(sortedVerses, id: \.key) { key, verse in
+                        let isLast = key == sortedVerses.last?.key
+                        let versiculo = Versiculo(
+                            libro: nav.book,
+                            capitulo: String(nav.chapter),
+                            versiculo: key,
+                            texto: verse
+                        )
+
+                        HStack(alignment: .top) {
+                            Text("\(versiculo.versiculo)")
+                                .fontWeight(.bold)
+                                .frame(width: 30, alignment: .leading)
+                            Text(versiculo.texto)
+                                .multilineTextAlignment(.leading)
+                                .bold()
+                        }
+                        .padding(16)
+                        .background(viewModel.isFavorite(versiculo) ? Color.blue.opacity(0.3) : Color(.systemBackground))
+                        .cornerRadius(10)
+                        .shadow(color: Color.primary.opacity(0.1), radius: 2)
+                        .contextMenu {
+                            Button {
+                                viewModel.saveFavoriteVersicle(versiculo:versiculo)
+                            } label : {
+                                HStack {
+                                    Text("Agregar a Favoritos")
+                                    Image(systemName: "star.fill")
+                                }
+                            }
+                        }
+
+                        if isLast {
+                            VStack(spacing: 16) {
+                                HStack {
+                                    if beforeChapter > 0 {
+                                        Button {
+                                            navigationPath.removeLast(navigationPath.count)
+                                            navigationPath.append(ChapterNavigation(book: nav.book, chapter: beforeChapter))
+                                        } label: {
+                                            Text("← Capítulo anterior")
+                                                .font(.caption)
+                                                .foregroundColor(.blue)
+                                                .padding()
+                                                .cornerRadius(16)
+                                                .background(Color.blue.opacity(0.05))
+                                        }
+                                    }
+                                    
+                                    Spacer(minLength: 32) // Espacio entre los botones
+
+                                    Button {
+                                        navigationPath.removeLast(navigationPath.count)
+                                        navigationPath.append(ChapterNavigation(book: nav.book, chapter: afterChapter))
+                                    } label: {
+                                        Text("Siguiente capítulo →")
+                                            .font(.caption)
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                            .cornerRadius(16)
+                                            .background(Color.blue.opacity(0.05))
+                                    }
+                                }
+                                .padding(.horizontal)
+
+                                Text("📖 Fin del capítulo")
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+                                    .padding(.bottom, 8)
+                            }
+                            .padding(.top, 16)
+                        }
+                    }
+                } else {
+                    ProgressView("Cargando capítulo...")
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+        .task(id: nav.chapter) {
+            await viewModel.fetchDetailBook(libro: nav.book, chapter: nav.chapter)
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        ChapterDetailView(
+            navigationPath: .constant(NavigationPath()),
+            nav: ChapterNavigation(book: "juan", chapter: 15)
+        )
+    }
+}

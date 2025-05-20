@@ -94,7 +94,10 @@ struct SearchingBibleView: View {
             }
             .navigationDestination(isPresented: $navigateToChapter) {
                 if let book = selectedBook, let chapter = selectedChapter {
-                    ChapterDetailView(libro: book, chapter: chapter)
+                    ChapterDetailView(
+                        navigationPath: .constant(NavigationPath()),
+                        nav: ChapterNavigation(book: book, chapter: chapter)
+                    )
                 }
             }
         }

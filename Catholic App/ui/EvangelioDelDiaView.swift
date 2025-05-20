@@ -21,10 +21,10 @@ struct EvangelioDelDiaView: View {
                         }
 
                         if !segundaLectura.isEmpty {
-                            SeccionEvangelio(titulo: "📘 Segunda Lectura", contenido: cutBefore(palabra: "ACLAMACIÓN", en: segundaLectura))
+                            SeccionEvangelio(titulo: "📖 Segunda Lectura", contenido: cutBefore(palabra: "ACLAMACIÓN", en: segundaLectura))
                         }
                     } else if !contenido.isEmpty {
-                        SeccionEvangelio(titulo: "🎶 Salmo Responsorial", contenido: contenido)
+                        SeccionEvangelio(titulo: "🎶 Salmo Responsorial", contenido: cutBefore(palabra: "ACLAMACIÓN", en: contenido))
                     }
 
                     SeccionEvangelio(titulo: "📜 Evangelio", contenido: cutBefore(palabra: "Credo", en: evangelio.evangelio))
@@ -42,8 +42,8 @@ struct EvangelioDelDiaView: View {
             }
         }
     }
-    func cutBefore(palabra: String, en texto: [String]) -> [String] {
-        if let index = texto.firstIndex(where: { $0.contains(palabra) }) {
+    func cutBefore(palabra: String?, en texto: [String]) -> [String] {
+        if let index = texto.firstIndex(where: { $0.contains(palabra ?? "ACLAMACIÓN") }) {
             return Array(texto[..<index])
         }
         return texto
