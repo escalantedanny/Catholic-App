@@ -4,13 +4,10 @@ import CacheManager
 struct ShowBodyView: View {
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
     @State private var navigateToFavorites = false
-    @State private var navigateToChapter = false
-    @State private var selectedChapter: Int?
-    @State private var selectedBook: String?
     @State private var navigationPath = NavigationPath()
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 6) {
                     
@@ -22,36 +19,46 @@ struct ShowBodyView: View {
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack() {
-                            ForEach(Constants.keys.list, id: \.0) { item in
+                            ForEach(Constants.keys.menuItems) { item in
+                                
                                 Button(action: {
-                                    print("Botón \(item.0) presionado")
-                                    if item.0 == "Favoritos" {
-                                        navigateToFavorites = true
-                                    }
+                                    navigationPath.append(item.destination)
                                 }) {
                                     VStack {
-                                        Text(item.1)
+                                        Text(item.emoji)
                                             .font(.system(size: 48))
-                                        Text(item.0)
+                                        Text(item.title)
                                             .font(.caption)
-                                            .foregroundColor(.primary )
+                                            .foregroundColor(.primary)
                                     }
                                     .frame(width: 120, height: 120)
                                     .background(Color.blue.opacity(0.2))
                                     .cornerRadius(25)
                                 }
-                            }
+                             }
                         }
                         .padding(.horizontal)
-                        
                     }
                     .background(Color(.systemBackground))
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
-                    .navigationDestination(isPresented: $navigateToFavorites) {
-                        FavoriteVersesView()
+                    .navigationDestination(for: MenuDestination.self) { destination in
+                        switch destination {
+                            case .favorites:
+                                FavoriteVersesView()
+                            case .tools:
+                                FavoriteVersesView()
+                            case .games:
+                                FavoriteVersesView()
+                            case .resources:
+                                FavoriteVersesView()
+                            case .functions:
+                                FavoriteVersesView()
+                            case .community:
+                                FavoriteVersesView()
+                        }
                     }
-                    
+                                        
                     if let versiculo = viewModel.versiculo {
                             VStack {
                                 Text(versiculo.texto)
@@ -77,23 +84,11 @@ struct ShowBodyView: View {
                             .cornerRadius(25)
                             .padding(.horizontal)
                             .padding(.bottom, 16)
-                            .navigationDestination(
-                                isPresented: $navigateToChapter,
-                                destination: {
-                                    selectedBook.flatMap { book in
-                                        selectedChapter.map { chapter in
-                                            ChapterDetailView(
-                                                navigationPath: $navigationPath,
-                                                nav: ChapterNavigation(book: book, chapter: chapter)
-                                            )
-                                        }
-                                    }
-                                })
                             .contextMenu {
                                 Button {
-                                    selectedChapter = Int(versiculo.capitulo)
-                                    selectedBook = versiculo.libro
-                                    navigateToChapter = true
+                                    if let chapter = Int(versiculo.capitulo) {
+                                        navigationPath.append(ChapterNavigation(book: versiculo.libro, chapter: chapter))
+                                    }
                                 } label: {
                                     Label("Ir al capitulo", systemImage: "arrowshape.turn.up.right.fill")
                                 }
@@ -111,38 +106,63 @@ struct ShowBodyView: View {
                                     }
                                 }
                             }
+                            .navigationDestination(for: ChapterNavigation.self) { destination in
+                                ChapterDetailView(
+                                    navigationPath: $navigationPath,
+                                    nav: destination
+                                )
+                            }
                             .background(Color(.systemBackground))
+
                     } else {
                         Text("Cargando...!")
                             .padding()
                     }
                     
+
+                    
                     VStack() {
                         HStack() {
-                            NavigationLink(destination: TipsView()) {
+                            Button {
+                                navigationPath.append(MenuDestinationBottom.tips)
+                            } label: {
                                 MenuItem(icon: Constants.Icons.tips, title: Constants.labels.Tip)
+                                    .foregroundColor(.primary)
                             }
-                            .foregroundColor(.primary)
-                            NavigationLink(destination: RosarioView()) {
+                            Button{
+                                navigationPath.append(MenuDestinationBottom.rosary)
+                            } label: {
                                 MenuItem(icon: Constants.Icons.rosario, title: Constants.labels.Rosary)
+                                    .foregroundColor(.primary)
                             }
-                            .foregroundColor(.primary)
                         }
                         
                         HStack() {
-                            NavigationLink(destination: LetaniasView()) {
+                            Button {
+                                navigationPath.append(MenuDestinationBottom.letanies)
+                            } label: {
                                 MenuItem(icon: Constants.Icons.letanias, title: Constants.labels.Letanies)
+                                    .foregroundColor(.primary)
                             }
-                            .foregroundColor(.primary)
-                            NavigationLink(destination: HowToPrayView()) {
+                            Button {
+                                navigationPath.append(MenuDestinationBottom.prays)
+                            } label : {
                                 MenuItem(icon: Constants.Icons.howPray, title: Constants.labels.HowPray)
+                                    .foregroundColor(.primary)
                             }
-                            .foregroundColor(.primary)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
                     .cornerRadius(16)
                     .background(Color(.systemBackground))
+                }
+                .navigationDestination(for: MenuDestinationBottom.self){ destination in
+                    switch destination {
+                        case .tips: TipsView()
+                        case .rosary: RosarioView()
+                        case .letanies: LetaniasView()
+                        case .prays: HowToPrayView()
+                    }
                 }
                 .onAppear {
                     Task {
@@ -150,7 +170,13 @@ struct ShowBodyView: View {
                     }
                 }
             }
+            .refreshable {
+                Task {
+                    await viewModel.fetchRandomVersicle()
+                }
+            }
         }
+
     }
 }
 

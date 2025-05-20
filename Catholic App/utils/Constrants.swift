@@ -37,12 +37,20 @@ struct Constants {
     
     struct keys {
         static let list = [
-            ("Favoritos", "⭐"),
-            ("Funcionalidades Espirituales", "🙏"),
-            ("Recursos y Formación", "📚"),
-            ("Herramientas de Organización Espiritual", "📅"),
-            ("Conexión y Comunidad", "🌐"),
-            ("Interactivos y Educativos", "🎮")
+            ("Favoritos", "⭐", "FV"),
+            ("Funcionalidades Espirituales", "🙏", "FE"),
+            ("Recursos y Formación", "📚", "RF"),
+            ("Herramientas de Organización Espiritual", "📅", "HO"),
+            ("Conexión y Comunidad", "🌐", "CM"),
+            ("Interactivos y Educativos", "🎮", "ED")
+        ]
+        static let menuItems: [MenuItemModel] = [
+            MenuItemModel(title: "Favoritos", emoji: "⭐️", destination: .favorites),
+            MenuItemModel(title: "Herramientas", emoji: "🧰", destination: .tools),
+            MenuItemModel(title: "Juegos", emoji: "🎮", destination: .games),
+            MenuItemModel(title: "Recursos", emoji: "📚", destination: .resources),
+            MenuItemModel(title: "Funciones", emoji: "⚙️", destination: .functions),
+            MenuItemModel(title: "Comunidad", emoji: "🤝", destination: .community),
         ]
     }
     
