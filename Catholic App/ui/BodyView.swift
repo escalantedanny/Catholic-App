@@ -11,11 +11,19 @@ struct ShowBodyView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 6) {
                     
-                    Image("rosario_image")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: UIScreen.main.bounds.width, height: 250)
-                        .clipped()
+                    GeometryReader { geometry in
+                        let yOffset = geometry.frame(in: .global).minY
+                        Image("rosario_image")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(
+                                width: UIScreen.main.bounds.width,
+                                height: yOffset > 0 ? 250 + yOffset : 250
+                            )
+                            .clipped()
+                            .offset(y: yOffset > 0 ? -yOffset : 0)
+                    }
+                    .frame(height: 250)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack() {
@@ -91,6 +99,22 @@ struct ShowBodyView: View {
                                     }
                                 } label: {
                                     Label("Ir al capitulo", systemImage: "arrowshape.turn.up.right.fill")
+                                }
+                                Button {
+                                    let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+                                    UIPasteboard.general.string = textoCompleto
+                                } label: {
+                                    Label("Copiar versículo", systemImage: "doc.on.doc")
+                                }
+                                Button {
+                                    let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+                                    let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
+                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                       let rootVC = windowScene.windows.first?.rootViewController {
+                                        rootVC.present(activityVC, animated: true, completion: nil)
+                                    }
+                                } label: {
+                                    Label("Compartir", systemImage: "square.and.arrow.up")
                                 }
                                 if viewModel.isFavorite(versiculo) {
                                     Button {

@@ -55,6 +55,22 @@ struct ChapterDetailView: View {
                                     Image(systemName: "star.fill")
                                 }
                             }
+                            Button {
+                                let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+                                UIPasteboard.general.string = textoCompleto
+                            } label: {
+                                Label("Copiar versículo", systemImage: "doc.on.doc")
+                            }
+                            Button {
+                                let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+                                let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
+                                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                   let rootVC = windowScene.windows.first?.rootViewController {
+                                    rootVC.present(activityVC, animated: true, completion: nil)
+                                }
+                            } label: {
+                                Label("Compartir", systemImage: "square.and.arrow.up")
+                            }
                         }
 
                         if isLast {
