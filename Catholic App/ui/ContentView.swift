@@ -6,7 +6,7 @@ struct ContentView: View {
     @State private var showMenu = false
     @State private var selectedTab: Int = 0
     @State private var viewID = UUID()
-    @State private var bookSelected: String = "genesis"
+    @State private var bookSelected: String = "Genesis"
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
     
     var body: some View {

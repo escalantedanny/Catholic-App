@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2708B0A22DDEACCE0077279A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2708B0A12DDEACCE0077279A /* Localizable.strings */; };
 		279694C52DCA9A57007837A6 /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 279694C42DCA9A57007837A6 /* Navigation */; };
 		279834AE2DB93DA000A8135B /* CacheManager in Frameworks */ = {isa = PBXBuildFile; productRef = 279834AD2DB93DA000A8135B /* CacheManager */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2708B0A02DDEACCE0077279A /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		2708B0A42DDEAD370077279A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		27ABE71D2DB7DE0E002A9EED /* Catholic App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Catholic App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -39,6 +42,7 @@
 		27ABE7142DB7DE0E002A9EED = {
 			isa = PBXGroup;
 			children = (
+				2708B0A12DDEACCE0077279A /* Localizable.strings */,
 				27ABE71F2DB7DE0E002A9EED /* Catholic App */,
 				27ABE71E2DB7DE0E002A9EED /* Products */,
 			);
@@ -95,11 +99,12 @@
 				};
 			};
 			buildConfigurationList = 27ABE7182DB7DE0E002A9EED /* Build configuration list for PBXProject "Catholic App" */;
-			developmentRegion = en;
+			developmentRegion = "es-419";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				"es-419",
 			);
 			mainGroup = 27ABE7142DB7DE0E002A9EED;
 			minimizedProjectReferenceProxies = 1;
@@ -122,6 +127,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2708B0A22DDEACCE0077279A /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +142,18 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2708B0A12DDEACCE0077279A /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2708B0A02DDEACCE0077279A /* es-419 */,
+				2708B0A42DDEAD370077279A /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		27ABE7272DB7DE10002A9EED /* Debug */ = {

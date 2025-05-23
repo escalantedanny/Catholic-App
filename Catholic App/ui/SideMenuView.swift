@@ -40,6 +40,7 @@ struct MenuList: View {
     
     @Binding var showMenu: Bool
     @Binding var bookSelected: String
+    @State private var text: String = ""
     
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
 
@@ -47,16 +48,32 @@ struct MenuList: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 if !viewModel.books.isEmpty {
-                    ForEach(viewModel.books, id: \.self) { libro in
+                    HStack {
+                        TextField("Libro", text: $text)
+                            .padding()
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(10)
+                            .submitLabel(.search)
+                            .onSubmit {
+                                //triggerSearch()
+                            }
+                        
+                        Image(systemName: "magnifyingglass")
+                            .padding(.trailing)
+                            .onTapGesture {
+                                //triggerSearch()
+                            }
+                    }
+
+                    ForEach(filteredBooks, id: \.self) { libro in
                         let bookName = libro.trimmingCharacters(in: .whitespacesAndNewlines)
                         
                         if bookName.lowercased() == "mateo" {
                             ExtractedView(text: "Nuevo Testamento")
                         } else if bookName.lowercased() == "genesis" {
-                            Spacer()
                             ExtractedView(text: "Antiguo Testamento")
                         }
-                        Label(bookName.capitalized, systemImage: "book")
+                        Label(bookName, systemImage: "book")
                             .onTapGesture {
                                 print("📘 Libro seleccionado: \(libro)")
                                 withAnimation {
@@ -87,6 +104,15 @@ struct MenuList: View {
             }
         }
     }
+    private var filteredBooks: [String] {
+        if text.trimmingCharacters(in: .whitespaces).isEmpty {
+            return viewModel.books
+        } else {
+            return viewModel.books.filter {
+                $0.lowercased().contains(text.lowercased())
+            }
+        }
+    }
 }
 
 struct ExtractedView: View {
@@ -110,9 +136,9 @@ struct ExtractedView: View {
 
 
 #Preview {
-    //MenuList(showMenu: .constant(true), bookSelected: .constant("") )
-    //    .environment(\.colorScheme, .dark)
-
-    SideMenuView(showMenu: .constant(true), selectedTab: .constant(0))
+    MenuList(showMenu: .constant(true), bookSelected: .constant("") )
         .environment(\.colorScheme, .dark)
+
+    //SideMenuView(showMenu: .constant(true), selectedTab: .constant(0))
+        //.environment(\.colorScheme, .dark)
 }

@@ -18,7 +18,7 @@ struct DetailBookChaptersView: View {
 
                 if let book = viewModel.book {
                     VStack {
-                        Text("\(bookSelected.capitalized)")
+                        Text("\(bookSelected)")
                             .font(.system(.largeTitle, design: .rounded))
                         ScrollView {
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 12) {
@@ -52,7 +52,7 @@ struct DetailBookChaptersView: View {
 
 #Preview {
     NavigationStack {
-        DetailBookChaptersView(bookSelected: "juan")
+        DetailBookChaptersView(bookSelected: "II reyes")
     }
     //.environment(\.colorScheme, .dark)
 }
