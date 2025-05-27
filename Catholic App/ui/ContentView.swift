@@ -8,10 +8,13 @@ struct ContentView: View {
     @State private var viewID = UUID()
     @State private var bookSelected: String = "Genesis"
     @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var checkViewModel = CheckHealthModel(healthService: HealthServiceImpl())
+    @State private var navigationPath = NavigationPath()
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .leading) {
+                Color.white.ignoresSafeArea()
                 VStack(spacing: 0) {
 
                     TopBarView(showMenu: $showMenu)
@@ -39,7 +42,7 @@ struct ContentView: View {
                             }
                         }
                     if selectedTab == 0 || selectedTab == 3 || selectedTab == 4 || selectedTab == 1 {
-                        SideMenuView(showMenu: $showMenu, selectedTab: $selectedTab)
+                        SideMenuView(showMenu: $showMenu, selectedTab: $selectedTab, navigationPath: $navigationPath)
                             .transition(.move(edge: .leading))
                             .zIndex(1)
                     } else {
@@ -50,6 +53,13 @@ struct ContentView: View {
                 }
             }
             .animation(.easeInOut, value: showMenu)
+        }
+        .task {
+            do {
+                try await checkViewModel.checkHealth()
+            } catch {
+                print("❌ Error al verificar estado de salud: \(error.localizedDescription)")
+            }
         }
     }
 }
