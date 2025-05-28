@@ -31,7 +31,7 @@ struct FavoriteVersesView: View {
                         .padding(.vertical, 4)
                         .contextMenu {
                             Button {
-                                viewModel.deleteFavoriteVersicle(versiculo: versiculo)
+                                viewModel.deleteFavorite(versiculo: versiculo)
                                 loadFavorites()
                             } label: {
                                 Label("Eliminar de Favoritos", systemImage: "star.slash.fill")

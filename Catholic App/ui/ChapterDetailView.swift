@@ -50,7 +50,7 @@ struct ChapterDetailView: View {
                         .contextMenu {
                             if viewModel.isFavorite(versiculo) {
                                 Button {
-                                    viewModel.deleteFavoriteVersicle(versiculo: versiculo)
+                                    viewModel.deleteFavorite(versiculo: versiculo)
                                 } label: {
                                     Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
                                 }

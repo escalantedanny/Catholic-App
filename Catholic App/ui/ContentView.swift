@@ -8,7 +8,6 @@ struct ContentView: View {
     @State private var selectedTab: Int = 0
     @State private var viewID = UUID()
     @State private var bookSelected: String = "Genesis"
-    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     @State private var navigationPath = NavigationPath()
     
     var body: some View {
