@@ -4,19 +4,24 @@ import Combine
 
 class BibleApiViewModel: ObservableObject {
     
+    @Published var status: String = "Desconocido"
     @Published var versiculo: Versiculo?
     @Published var versiculos: [Versiculo] = []
     @Published var books: [String] = []
     @Published var book: BookResponse?
     @Published var chapter: ChapterResponse?
     @Published var evangelio: EvangelioResponse?
+    @Published var isLoading: Bool = false
+    
+    private let bibleService: IBibleService
     
     private var cancellables = Set<AnyCancellable>()
     private var cache: CacheService
     private var session: URLSession
     
-    init (cache: CacheManager) {
+    init (cache: CacheManager, bibleService: IBibleService) {
         self.cache = cache
+        self.bibleService = bibleService
         let config = URLSessionConfiguration.ephemeral
             config.timeoutIntervalForRequest = 20
             config.timeoutIntervalForResource = 20
@@ -24,54 +29,17 @@ class BibleApiViewModel: ObservableObject {
     }
     
     @MainActor
-    func checkHealth(retryCount: Int = 3) async {
-        guard let url = URL(string: Constants.urls.checkHealth ) else { return }
-        
-        for attempt in 1...retryCount {
-            do {
-                let (data, _) = try await session.data(from: url)
-                print("🛰️ Requesting versículo from \(url.absoluteString)")
-                print("📦 Data received: \(String(data: data, encoding: .utf8) ?? "Invalid UTF8")")
-                let response = try JSONDecoder().decode(APIResponse.self, from: data)
-                print("✅ response recibido: \(response)")
-
-                return
-            } catch {
-                print("❌ Error intento \(attempt): \(error.localizedDescription)")
-                if attempt < retryCount {
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
-                }
-            }
-        }
-    }
-    
-    @MainActor
     func fetchRandomVersicle(retryCount: Int = 3) async {
-        guard let url = URL(string: Constants.urls.randomVersicles ) else { return }
         
-        if let randomVersicle: Versiculo = self.cache.get(forKey: "RANDOM_VERSICLE") {
-            self.versiculo = randomVersicle
-            print("📦 randomVersicle cargados desde caché")
-            return
-        }
-
-        for attempt in 1...retryCount {
-            do {
-                let (data, _) = try await session.data(from: url)
-                print("🛰️ Requesting versículo from \(url.absoluteString)")
-                print("📦 Data received: \(String(data: data, encoding: .utf8) ?? "Invalid UTF8")")
-                let versiculo = try JSONDecoder().decode(Versiculo.self, from: data)
-                self.versiculo = versiculo
-                self.cache.save(versiculo, forKey: "RANDOM_VERSICLE", expiration: .hours(24))
-                print("✅ Versículo recibido: \(versiculo.texto)")
-
-                return
-            } catch {
-                print("❌ Error intento \(attempt): \(error.localizedDescription)")
-                if attempt < retryCount {
-                    try? await Task.sleep(nanoseconds: 1_000_000_000)
-                }
-            }
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            let result = try await bibleService.fetchRandomVersicle()
+            self.versiculo = result
+            self.status = "Versículo cargado correctamente"
+        } catch {
+            print("❌ Error al obtener versículo: \(error)")
+            self.status = "Error: \(error.localizedDescription)"
         }
     }
     

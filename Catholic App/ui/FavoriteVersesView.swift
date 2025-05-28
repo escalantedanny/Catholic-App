@@ -1,8 +1,9 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct FavoriteVersesView: View {
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     @State private var favoritos: [Versiculo] = []
 
     var body: some View {

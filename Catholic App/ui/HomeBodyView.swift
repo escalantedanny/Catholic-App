@@ -1,8 +1,9 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct HomeBodyView: View {
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
 
     var body: some View {
         VStack {

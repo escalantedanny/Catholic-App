@@ -1,8 +1,9 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct ShowBodyView: View {
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     @State private var navigateToFavorites = false
     @State private var navigationPath = NavigationPath()
     

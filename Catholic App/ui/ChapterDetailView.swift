@@ -1,11 +1,12 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct ChapterDetailView: View {
     @Binding var navigationPath: NavigationPath
     let nav: ChapterNavigation
 
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
 
     var body: some View {
         ScrollView {

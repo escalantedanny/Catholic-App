@@ -1,5 +1,6 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct SideMenuView: View {
 
@@ -74,7 +75,7 @@ struct MenuList: View {
     @Binding var bookSelected: String
     @State private var text: String = ""
     
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
 
     var body: some View {
         ScrollView {

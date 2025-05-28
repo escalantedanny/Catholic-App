@@ -1,10 +1,11 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct SearchingBibleView: View {
     
     @State private var text: String = ""
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     @State private var isLoading = false
     @State private var navigateToChapter = false
     @State private var selectedChapter: Int?

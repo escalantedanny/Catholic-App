@@ -1,4 +1,5 @@
 import SwiftUI
+import Resolver
 import CacheManager
 
 struct ContentView: View {
@@ -7,8 +8,7 @@ struct ContentView: View {
     @State private var selectedTab: Int = 0
     @State private var viewID = UUID()
     @State private var bookSelected: String = "Genesis"
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
-    @StateObject private var checkViewModel = CheckHealthModel(healthService: HealthServiceImpl())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     @State private var navigationPath = NavigationPath()
     
     var body: some View {
@@ -27,11 +27,6 @@ struct ContentView: View {
                     
                 }
                 .disabled(showMenu)
-                .onAppear() {
-                    Task {
-                        await viewModel.checkHealth()
-                    }
-                }
 
                 if showMenu {
                     Color.black.opacity(0.3)
@@ -53,13 +48,6 @@ struct ContentView: View {
                 }
             }
             .animation(.easeInOut, value: showMenu)
-        }
-        .task {
-            do {
-                try await checkViewModel.checkHealth()
-            } catch {
-                print("❌ Error al verificar estado de salud: \(error.localizedDescription)")
-            }
         }
     }
 }

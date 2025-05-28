@@ -1,15 +1,23 @@
 
 import Combine
 import SwiftUI
-import CacheManager
+
+protocol RestClient {
+    /// Retrieves a JSON resource and decodes it
+    func get<T: Decodable, E: Endpoint>(_ endpoint: E) -> AnyPublisher<T, Error>
+    
+}
+
+enum HealthStatus: String {
+    case ok
+    case disconnected
+}
 
 class HealthServiceImpl: IHealthService {
     
     private var session: URLSession
-    private var cache: CacheService
     
-    init(session: URLSession = .shared, cache: CacheService = CacheManager()) {
-        self.cache = cache
+    init(session: URLSession = .shared) {
         let config = URLSessionConfiguration.ephemeral
             config.timeoutIntervalForRequest = 20
             config.timeoutIntervalForResource = 20
@@ -17,8 +25,10 @@ class HealthServiceImpl: IHealthService {
     }
     
     
-    func checkHealth(retryCount: Int = 3) async throws -> String {
-        guard let url = URL(string: Constants.urls.checkHealth ) else { return "disconected"}
+    func checkHealth(retryCount: Int) async throws -> String {
+        guard let url = URL(string: Constants.urls.checkHealth ) else {
+            return HealthStatus.disconnected.rawValue
+        }
         
         for attempt in 1...retryCount {
             do {
