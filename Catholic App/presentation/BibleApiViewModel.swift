@@ -12,7 +12,8 @@ class BibleApiViewModel: ObservableObject {
     @Published var chapter: ChapterResponse?
     @Published var evangelio: EvangelioResponse?
     @Published var isLoading: Bool = false
-    
+    @Published var favoritos: [Versiculo] = []
+
     private let bibleService: IBibleService
     
     private var cancellables = Set<AnyCancellable>()
@@ -26,6 +27,11 @@ class BibleApiViewModel: ObservableObject {
             config.timeoutIntervalForRequest = 20
             config.timeoutIntervalForResource = 20
             self.session = URLSession(configuration: config)
+        loadFavoritosFromCache()
+    }
+    
+    private func loadFavoritosFromCache() {
+        favoritos = cache.get(forKey: "FAVORITE_LIST") ?? []
     }
     
     @MainActor
@@ -128,53 +134,33 @@ class BibleApiViewModel: ObservableObject {
             }
         }
     }
-    
-    @MainActor
-    func saveFavoriteVersicle(versiculo: Versiculo) {
-        var favoritos: [Versiculo] = self.cache.get(forKey: "FAVORITE_LIST") ?? []
 
-        if !favoritos.contains(where: {
-            $0.libro == versiculo.libro &&
-            $0.capitulo == versiculo.capitulo &&
-            $0.versiculo == versiculo.versiculo
-        }) {
-            favoritos.append(versiculo)
-            self.cache.save(favoritos, forKey: "FAVORITE_LIST", expiration: .never)
-            print("✅ Versículo guardado en favoritos.")
-        } else {
-            print("⚠️ El versículo ya está en favoritos.")
-        }
-
-        print("Favoritos actuales:", favoritos)
-    }
-    
     func isFavorite(_ versiculo: Versiculo) -> Bool {
-        let favoritos: [Versiculo] = cache.get(forKey: "FAVORITE_LIST") ?? []
-        return favoritos.contains(where: {
+        favoritos.contains(where: {
             $0.libro == versiculo.libro &&
             $0.capitulo == versiculo.capitulo &&
             $0.versiculo == versiculo.versiculo
         })
     }
-    
+
+    @MainActor
+    func saveFavoriteVersicle(versiculo: Versiculo) {
+        guard !isFavorite(versiculo) else { return }
+
+        favoritos.append(versiculo)
+        cache.save(favoritos, forKey: "FAVORITE_LIST", expiration: .never)
+        print("✅ Versículo guardado en favoritos.")
+    }
+
     @MainActor
     func deleteFavoriteVersicle(versiculo: Versiculo) {
-        var favoritos: [Versiculo] = self.cache.get(forKey: "FAVORITE_LIST") ?? []
-        
-        if let index = favoritos.firstIndex(where: {
+        favoritos.removeAll(where: {
             $0.libro == versiculo.libro &&
             $0.capitulo == versiculo.capitulo &&
             $0.versiculo == versiculo.versiculo
-        }) {
-            favoritos.remove(at: index)
-            print("🗑️ Versículo eliminado de favoritos.")
-        } else {
-            favoritos.append(versiculo)
-            print("✅ Versículo guardado en favoritos.")
-        }
-        
-        self.cache.save(favoritos, forKey: "FAVORITE_LIST", expiration: .never)
-        print("Favoritos actuales:", favoritos)
+        })
+        cache.save(favoritos, forKey: "FAVORITE_LIST", expiration: .never)
+        print("🗑️ Versículo eliminado de favoritos.")
     }
     
     @MainActor

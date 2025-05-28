@@ -223,7 +223,7 @@ struct MenuItem: View {
             Text(title)
                 .font(.caption)
         }
-        .frame(width: 160, height: 80, alignment: .center)
+        .frame(width: 175, height: 80, alignment: .center)
         .background(Color.blue.opacity(0.2))
         .cornerRadius(16)
         .background(Color(.systemBackground))
