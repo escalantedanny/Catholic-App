@@ -1,5 +1,6 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct DetailBookChaptersView: View {
     
@@ -7,7 +8,7 @@ struct DetailBookChaptersView: View {
     @State private var navigationPath = NavigationPath()
     @State private var selectedChapter: Int? = nil
     @State private var navigate = false
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -18,7 +19,7 @@ struct DetailBookChaptersView: View {
 
                 if let book = viewModel.book {
                     VStack {
-                        Text("\(bookSelected.capitalized)")
+                        Text("\(bookSelected)")
                             .font(.system(.largeTitle, design: .rounded))
                         ScrollView {
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4), spacing: 12) {
@@ -52,7 +53,7 @@ struct DetailBookChaptersView: View {
 
 #Preview {
     NavigationStack {
-        DetailBookChaptersView(bookSelected: "juan")
+        DetailBookChaptersView(bookSelected: "II reyes")
     }
     //.environment(\.colorScheme, .dark)
 }

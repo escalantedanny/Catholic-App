@@ -1,3 +1,4 @@
+import SwiftUICore
 struct Constants {
     struct Titles {
         static let appName = "Catholic App"
@@ -55,7 +56,7 @@ struct Constants {
     }
     
     struct labels {
-        static let Tip = "Tips"
+        static let Tip: LocalizedStringKey = "title_tip"
         static let Rosary = "Rosario"
         static let Letanies = "Letanias"
         static let HowPray = "Como podré Orar?"

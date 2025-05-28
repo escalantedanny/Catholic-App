@@ -1,10 +1,11 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct SearchingBibleView: View {
     
     @State private var text: String = ""
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     @State private var isLoading = false
     @State private var navigateToChapter = false
     @State private var selectedChapter: Int?
@@ -15,24 +16,9 @@ struct SearchingBibleView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                HStack {
-                    TextField("Buscar en la Biblia", text: $text)
-                        .padding()
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(10)
-                        .submitLabel(.search)
-                        .onSubmit {
-                            triggerSearch()
-                        }
-                    
-                    Image(systemName: "magnifyingglass")
-                        .padding(.trailing)
-                        .onTapGesture {
-                            triggerSearch()
-                        }
-                }
-                .padding()
-                
+                SearchBar(text: $text, onSearch: triggerSearch)
+                    .padding()
+
                 if isLoading {
                     ProgressView(Constants.Titles.searching)
                         .padding()
@@ -40,52 +26,30 @@ struct SearchingBibleView: View {
                 } else {
                     List {
                         if viewModel.versiculos.isEmpty && text.isEmpty {
-                            Section(header: Text("Búsquedas populares")) {
-                                ForEach(popularSearches, id: \.self) { search in
-                                    Text(search)
-                                        .padding()
-                                        .onTapGesture {
-                                            text = search
-                                            triggerSearch()
-                                        }
-                                }
-                            }
+                            PopularSearchView(searches: popularSearches, onTap: { search in
+                                text = search
+                                triggerSearch()
+                            })
                         }
-                        
+
                         if !viewModel.versiculos.isEmpty {
                             Section(header: Text("Resultados de \(text)")) {
                                 ForEach(viewModel.versiculos, id: \.self) { versiculo in
-                                    VStack(alignment: .leading) {
-                                        Text(versiculo.texto)
-                                            .font(.body)
-                                        Text("\(versiculo.libro) \(versiculo.capitulo):\(versiculo.versiculo)")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                        
-                                    }
-                                    .padding(.vertical, 4)
-                                    .contextMenu {
-                                        Button {
+                                    VersiculoRowView(
+                                        versiculo: versiculo,
+                                        isFavorite: viewModel.isFavorite(versiculo),
+                                        onGoToChapter: {
                                             selectedChapter = Int(versiculo.capitulo)
                                             selectedBook = versiculo.libro
                                             navigateToChapter = true
-                                        } label: {
-                                            Label("Ir al capítulo", systemImage: "arrowshape.turn.up.right.fill")
+                                        },
+                                        onAddFavorite: {
+                                            viewModel.saveFavoriteVersicle(versiculo: versiculo)
+                                        },
+                                        onRemoveFavorite: {
+                                            viewModel.deleteFavorite(versiculo: versiculo)
                                         }
-                                        if viewModel.isFavorite(versiculo) {
-                                            Button {
-                                                viewModel.deleteFavoriteVersicle(versiculo: versiculo)
-                                            } label: {
-                                                Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
-                                            }
-                                        } else {
-                                            Button {
-                                                viewModel.saveFavoriteVersicle(versiculo: versiculo)
-                                            } label: {
-                                                Label("Agregar a Favoritos", systemImage: "star.fill")
-                                            }
-                                        }
-                                    }
+                                    )
                                 }
                             }
                         }
@@ -117,7 +81,78 @@ struct SearchingBibleView: View {
     }
 }
 
+
+struct SearchBar: View {
+    @Binding var text: String
+    let onSearch: () -> Void
+
+    var body: some View {
+        HStack {
+            TextField("Buscar en la Biblia", text: $text)
+                .padding()
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(10)
+                .submitLabel(.search)
+                .onSubmit { onSearch() }
+            
+            Image(systemName: "magnifyingglass")
+                .padding(.trailing)
+                .onTapGesture { onSearch() }
+        }
+    }
+}
+
+struct PopularSearchView: View {
+    let searches: [String]
+    let onTap: (String) -> Void
+
+    var body: some View {
+        Section(header: Text("Búsquedas populares")) {
+            ForEach(searches, id: \.self) { search in
+                Text(search)
+                    .padding()
+                    .onTapGesture {
+                        onTap(search)
+                    }
+            }
+        }
+    }
+}
+
+struct VersiculoRowView: View {
+    let versiculo: Versiculo
+    let isFavorite: Bool
+    let onGoToChapter: () -> Void
+    let onAddFavorite: () -> Void
+    let onRemoveFavorite: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(versiculo.texto)
+                .font(.body)
+            Text("\(versiculo.libro) \(versiculo.capitulo):\(versiculo.versiculo)")
+                .font(.caption)
+                .foregroundColor(.gray)
+        }
+        .padding(.vertical, 4)
+        .contextMenu {
+            Button(action: onGoToChapter) {
+                Label("Ir al capítulo", systemImage: "arrowshape.turn.up.right.fill")
+            }
+            if isFavorite {
+                Button(action: onRemoveFavorite) {
+                    Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
+                }
+            } else {
+                Button(action: onAddFavorite) {
+                    Label("Agregar a Favoritos", systemImage: "star.fill")
+                }
+            }
+        }
+    }
+}
+
 #Preview {
     SearchingBibleView()
-        .environment(\.colorScheme, .dark)
+        //.environment(\.colorScheme, .dark)
 }

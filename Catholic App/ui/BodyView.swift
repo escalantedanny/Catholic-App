@@ -1,8 +1,9 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct ShowBodyView: View {
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     @State private var navigateToFavorites = false
     @State private var navigationPath = NavigationPath()
     
@@ -118,7 +119,7 @@ struct ShowBodyView: View {
                                 }
                                 if viewModel.isFavorite(versiculo) {
                                     Button {
-                                        viewModel.deleteFavoriteVersicle(versiculo: versiculo)
+                                        viewModel.deleteFavorite(versiculo: versiculo)
                                     } label: {
                                         Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
                                     }
@@ -150,13 +151,13 @@ struct ShowBodyView: View {
                             Button {
                                 navigationPath.append(MenuDestinationBottom.tips)
                             } label: {
-                                MenuItem(icon: Constants.Icons.tips, title: Constants.labels.Tip)
+                                MenuItem(icon: Constants.Icons.tips, title: "title_tip")
                                     .foregroundColor(.primary)
                             }
                             Button{
                                 navigationPath.append(MenuDestinationBottom.rosary)
                             } label: {
-                                MenuItem(icon: Constants.Icons.rosario, title: Constants.labels.Rosary)
+                                MenuItem(icon: Constants.Icons.rosario, title: "title_rosary")
                                     .foregroundColor(.primary)
                             }
                         }
@@ -165,13 +166,13 @@ struct ShowBodyView: View {
                             Button {
                                 navigationPath.append(MenuDestinationBottom.letanies)
                             } label: {
-                                MenuItem(icon: Constants.Icons.letanias, title: Constants.labels.Letanies)
+                                MenuItem(icon: Constants.Icons.letanias, title: "title_letanies")
                                     .foregroundColor(.primary)
                             }
                             Button {
                                 navigationPath.append(MenuDestinationBottom.prays)
                             } label : {
-                                MenuItem(icon: Constants.Icons.howPray, title: Constants.labels.HowPray)
+                                MenuItem(icon: Constants.Icons.howPray, title: "title_howPray")
                                     .foregroundColor(.primary)
                             }
                         }
@@ -206,7 +207,7 @@ struct ShowBodyView: View {
 
 struct MenuItem: View {
     let icon: String
-    let title: String
+    let title: LocalizedStringKey
 
     var body: some View {
         VStack {
@@ -222,7 +223,7 @@ struct MenuItem: View {
             Text(title)
                 .font(.caption)
         }
-        .frame(width: 160, height: 80, alignment: .center)
+        .frame(width: 175, height: 80, alignment: .center)
         .background(Color.blue.opacity(0.2))
         .cornerRadius(16)
         .background(Color(.systemBackground))
