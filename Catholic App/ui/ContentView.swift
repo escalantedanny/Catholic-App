@@ -1,4 +1,5 @@
 import SwiftUI
+import Resolver
 import CacheManager
 
 struct ContentView: View {
@@ -6,12 +7,13 @@ struct ContentView: View {
     @State private var showMenu = false
     @State private var selectedTab: Int = 0
     @State private var viewID = UUID()
-    @State private var bookSelected: String = "genesis"
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @State private var bookSelected: String = "Genesis"
+    @State private var navigationPath = NavigationPath()
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .leading) {
+                Color.white.ignoresSafeArea()
                 VStack(spacing: 0) {
 
                     TopBarView(showMenu: $showMenu)
@@ -24,11 +26,6 @@ struct ContentView: View {
                     
                 }
                 .disabled(showMenu)
-                .onAppear() {
-                    Task {
-                        await viewModel.checkHealth()
-                    }
-                }
 
                 if showMenu {
                     Color.black.opacity(0.3)
@@ -39,7 +36,7 @@ struct ContentView: View {
                             }
                         }
                     if selectedTab == 0 || selectedTab == 3 || selectedTab == 4 || selectedTab == 1 {
-                        SideMenuView(showMenu: $showMenu, selectedTab: $selectedTab)
+                        SideMenuView(showMenu: $showMenu, selectedTab: $selectedTab, navigationPath: $navigationPath)
                             .transition(.move(edge: .leading))
                             .zIndex(1)
                     } else {

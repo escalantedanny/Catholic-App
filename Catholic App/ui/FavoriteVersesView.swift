@@ -1,8 +1,9 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct FavoriteVersesView: View {
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     @State private var favoritos: [Versiculo] = []
 
     var body: some View {
@@ -30,7 +31,7 @@ struct FavoriteVersesView: View {
                         .padding(.vertical, 4)
                         .contextMenu {
                             Button {
-                                viewModel.deleteFavoriteVersicle(versiculo: versiculo)
+                                viewModel.deleteFavorite(versiculo: versiculo)
                                 loadFavorites()
                             } label: {
                                 Label("Eliminar de Favoritos", systemImage: "star.slash.fill")

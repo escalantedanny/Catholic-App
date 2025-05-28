@@ -1,11 +1,12 @@
 import SwiftUI
 import CacheManager
+import Resolver
 
 struct ChapterDetailView: View {
     @Binding var navigationPath: NavigationPath
     let nav: ChapterNavigation
 
-    @StateObject private var viewModel = BibleApiViewModel(cache: CacheManager())
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
 
     var body: some View {
         ScrollView {
@@ -47,14 +48,20 @@ struct ChapterDetailView: View {
                         .cornerRadius(10)
                         .shadow(color: Color.primary.opacity(0.1), radius: 2)
                         .contextMenu {
-                            Button {
-                                viewModel.saveFavoriteVersicle(versiculo:versiculo)
-                            } label : {
-                                HStack {
-                                    Text("Agregar a Favoritos")
-                                    Image(systemName: "star.fill")
+                            if viewModel.isFavorite(versiculo) {
+                                Button {
+                                    viewModel.deleteFavorite(versiculo: versiculo)
+                                } label: {
+                                    Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
+                                }
+                            } else {
+                                Button {
+                                    viewModel.saveFavoriteVersicle(versiculo: versiculo)
+                                } label: {
+                                    Label("Agregar a Favoritos", systemImage: "star.fill")
                                 }
                             }
+
                             Button {
                                 let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
                                 UIPasteboard.general.string = textoCompleto
