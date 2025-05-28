@@ -1,5 +1,5 @@
 {
-  "originHash" : "504604b59ffbb989b60d46c7c13d5ca94833543e1e2fe0a85aef08b35a8c96f2",
+  "originHash" : "d1a41b81ff35c214603fab76c8fd001227f0d09aeb25d16704f3eb0163c5ab1f",
   "pins" : [
     {
       "identity" : "cachemanager",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "b5e1a4cc2fc0ba2928577fd9a7c83d1e0d9d1697",
         "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "resolver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hmlongco/Resolver",
+      "state" : {
+        "revision" : "47602af1ac8d7952299fbd0bda3cfbd12cf3a8ca",
+        "version" : "1.5.1"
       }
     }
   ],
