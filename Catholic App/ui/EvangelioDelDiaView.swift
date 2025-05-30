@@ -11,7 +11,6 @@ struct EvangelioDelDiaView: View {
                 if let evangelio = viewModel.evangelio {
                     SeccionEvangelio(titulo: "📖 Primera Lectura", contenido: evangelio.liturgiaDeLaPalabra)
 
-                    // Procesar el salmo
                     let contenido = evangelio.salmo
                     if let indiceLectura = contenido.firstIndex(where: { $0.uppercased().contains("SEGUNDA LECTURA") }) {
                         let salmo = Array(contenido[..<indiceLectura])

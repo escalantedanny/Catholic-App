@@ -20,6 +20,6 @@ extension Resolver {
     
     static func registerViewModels() {
         register { CheckHealthModel(healthService: resolve()) }
-        register { BibleApiViewModel(cache: resolve() as CacheManager, bibleService: resolve()) }
+        register { BibleApiViewModel(bibleService: resolve()) }
     }
 }

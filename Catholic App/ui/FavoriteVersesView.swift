@@ -4,7 +4,13 @@ import Resolver
 
 struct FavoriteVersesView: View {
     @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
-    @State private var favoritos: [Versiculo] = []
+    @State private var favoritos: [Versiculo]
+    private let isPreview: Bool
+    
+    init(favoritos: [Versiculo] = [], isPreview: Bool = false) {
+        _favoritos = State(initialValue: favoritos)
+        self.isPreview = isPreview
+    }
 
     var body: some View {
         VStack {
@@ -31,8 +37,10 @@ struct FavoriteVersesView: View {
                         .padding(.vertical, 4)
                         .contextMenu {
                             Button {
-                                viewModel.deleteFavorite(versiculo: versiculo)
-                                loadFavorites()
+                                Task {
+                                    await viewModel.deleteFavorite(versiculo: versiculo)
+                                    loadFavorites()
+                                }
                             } label: {
                                 Label("Eliminar de Favoritos", systemImage: "star.slash.fill")
                             }
@@ -43,17 +51,23 @@ struct FavoriteVersesView: View {
         }
         .background(Color(.systemBackground))
         .onAppear {
-            loadFavorites()
+            if !isPreview {
+                loadFavorites()
+            }
         }
     }
 
 
     private func loadFavorites() {
-        favoritos = viewModel.getFavoriteVerses()
+        self.favoritos = viewModel.getFavoriteVerses()
     }
 }
 
 #Preview {
-    FavoriteVersesView()
-        .environment(\.colorScheme, .dark)
+    FavoriteVersesView(
+        favoritos: [
+            Versiculo(libro: "Romanos", capitulo: "1", versiculo: "1", texto: "En los tiempos de los Reyes Magos")
+        ],
+        isPreview: true
+    )
 }

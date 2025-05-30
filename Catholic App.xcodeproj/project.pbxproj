@@ -21,9 +21,22 @@
 		27ABE71D2DB7DE0E002A9EED /* Catholic App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Catholic App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		279FA6592DE7CB0F00A3CF84 /* Exceptions for "Catholic App" folder in "Catholic App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 27ABE71C2DB7DE0E002A9EED /* Catholic App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		27ABE71F2DB7DE0E002A9EED /* Catholic App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				279FA6592DE7CB0F00A3CF84 /* Exceptions for "Catholic App" folder in "Catholic App" target */,
+			);
 			path = "Catholic App";
 			sourceTree = "<group>";
 		};
@@ -293,7 +306,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CatholicApp;
+				INFOPLIST_KEY_CFBundleDisplayName = "Fe +";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -339,7 +352,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CatholicApp;
+				INFOPLIST_KEY_CFBundleDisplayName = "Fe +";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
