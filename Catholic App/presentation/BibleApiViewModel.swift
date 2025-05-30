@@ -3,20 +3,15 @@ import Combine
 
 class BibleApiViewModel: ObservableObject {
     
-    @Published var status: String = "Desconocido"
     @Published var versiculo: Versiculo?
     @Published var versiculos: [Versiculo] = []
     @Published var books: [String] = []
     @Published var book: BookResponse?
     @Published var chapter: ChapterResponse?
     @Published var evangelio: EvangelioResponse?
-    @Published var isLoading: Bool = false
-    @Published var isFavorite: Bool = false
     @Published var favoritos: [Versiculo] = []
 
     private let bibleService: IBibleService
-    
-    private var cancellables = Set<AnyCancellable>()
     
     init (bibleService: IBibleService) {
         self.bibleService = bibleService
@@ -51,7 +46,8 @@ class BibleApiViewModel: ObservableObject {
 
     func deleteFavorite(versiculo: Versiculo) async {
         do {
-            self.favoritos = try await bibleService.deleteFavoriteVersicle(versiculo)
+            let nuevosFavoritos = try await bibleService.deleteFavoriteVersicle(versiculo)
+            self.favoritos = nuevosFavoritos
         } catch {
             print("❌ Error al obtener el evangelio: \(error)")
         }

@@ -56,7 +56,7 @@ struct ShowBodyView: View {
                             case .favorites:
                                 FavoriteVersesView()
                             case .tools:
-                                LiturgicalAgendaView()
+                                SpiritualToolsView()
                             case .games:
                                 FavoriteVersesView()
                             case .resources:
