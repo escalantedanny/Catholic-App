@@ -1,140 +1,156 @@
 import SwiftUI
 import UserNotifications
 
-struct Novena: Identifiable, Hashable {
-    var id: String { title }
-    let title: String
-    let prayers: [String]
-}
-
-
-struct NovenaListView: View {
-    let novenas: [Novena] = Novena.list
+struct NovenaSelectorView: View {
+    @StateObject private var viewModel = NovenaViewModel()
 
     var body: some View {
-        List(novenas) { novena in
-            NavigationLink(destination: NovenaDetailView(novena: novena)) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(novena.title)
-                        .font(.headline)
-                    Text("Duración: 9 días")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
-                .padding(.vertical, 8)
+        if let novena = viewModel.activeNovena {
+            NavigationLink(destination: NovenaDetailView(viewModel: viewModel)) {
+                Text("Continuar novena: \(novena.title)")
+                    .padding()
+                    .font(.headline)
             }
+            .navigationTitle("Mi Novena")
+        } else {
+            List(viewModel.novenas) { novena in
+                NavigationLink(destination: NovenaDetailView(novena: novena, viewModel: viewModel)) {
+                    Text(novena.title)
+                }
+            }
+            .navigationTitle("Elige una Novena")
         }
-        .navigationTitle("Planificador de Novenas")
+        
     }
 }
 
 struct NovenaDetailView: View {
-    let novena: Novena
-    @State private var started = false
-    @State private var startDate = Date()
-    @State private var showAlert = false
-    
-    var currentDay: Int {
-        let daysPassed = Calendar.current.dateComponents([.day], from: startDate, to: Date()).day ?? 0
-        return min(daysPassed, novena.prayers.count - 1)
+    let novena: Novena?
+    @ObservedObject var viewModel: NovenaViewModel
+
+    init(novena: Novena? = nil, viewModel: NovenaViewModel) {
+        self.novena = novena
+        self.viewModel = viewModel
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(novena.title)
+                Text(viewModel.activeNovena?.title ?? novena?.title ?? "")
                     .font(.title)
                     .bold()
 
-                Text("Duración: 9 días")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-
-                if started {
-                    Text("Novena iniciada el \(startDate.formatted(date: .long, time: .omitted))")
+                if let active = viewModel.activeNovena {
+                    Text("Iniciada el \(viewModel.startDate?.formatted(date: .long, time: .omitted) ?? "")")
                         .font(.footnote)
                         .foregroundColor(.blue)
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("📅 Día \(currentDay + 1)")
-                            .font(.headline)
-                        Text(novena.prayers[currentDay])
-                            .font(.body)
-                            .padding()
-                            .background(Color(.secondarySystemBackground))
-                            .cornerRadius(12)
+                    if let prayer = viewModel.currentPrayer {
+                        NovenaDayView(
+                            dayTitle: prayer.dayTitle,
+                            prayer: prayer.prayer,
+                            threePadreNuestros: active.threePadreNuestros ?? "",
+                            oracionesFinales: active.oracionesFinales ?? ""
+                        )
                     }
-                } else {
-                    Button(action: {
+
+                    HStack {
+                        Button("Anterior") { viewModel.goToPreviousDay() }
+                            .disabled(viewModel.isFirstDay())
+
+                        Spacer()
+
+                        Button("Siguiente") { viewModel.goToNextDay() }
+                            .disabled(viewModel.isLastDay())
+                    }
+
+                    Button("Cancelar Novena", role: .destructive) {
+                        viewModel.resetNovena()
+                    }
+                    .padding(.top)
+
+                } else if let novena = novena {
+                    Button("Iniciar Novena") {
                         requestNotificationPermission {
-                            started = true
-                            startDate = Date()
-                            scheduleNovenaNotifications()
+                            viewModel.startNovena(novena)
+                            viewModel.scheduleNovenaNotifications()
                         }
-                    }) {
-                        Label("Iniciar Novena", systemImage: "play.fill")
                     }
                     .buttonStyle(.borderedProminent)
-                    .padding(.top, 20)
+                    .padding(.top)
                 }
-
-                Spacer()
             }
             .padding()
         }
         .navigationTitle("Detalle")
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Permiso Denegado", isPresented: $showAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("Para recibir recordatorios de la novena, activa las notificaciones en Configuración.")
-        }
-    }
-
-    func scheduleNovenaNotifications() {
-        for day in 0..<novena.prayers.count {
-            let content = UNMutableNotificationContent()
-            content.title = "Novena: \(novena.title) - Día \(day + 1)"
-            content.body = novena.prayers[day]
-            content.sound = .default
-
-            if let triggerDate = Calendar.current.date(byAdding: .day, value: day, to: Date()) {
-                var components = Calendar.current.dateComponents([.year, .month, .day], from: triggerDate)
-                components.hour = 9
-                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-
-                let request = UNNotificationRequest(
-                    identifier: "\(novena.id)-day\(day + 1)",
-                    content: content,
-                    trigger: trigger
-                )
-
-                UNUserNotificationCenter.current().add(request)
-            }
-        }
     }
 
     func requestNotificationPermission(completion: @escaping () -> Void) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, _ in
-            if granted {
-                DispatchQueue.main.async {
-                    completion()
-                }
-            } else {
-                showAlert = true
+            DispatchQueue.main.async {
+                granted ? completion() : ()
             }
+        }
+    }
+}
+
+struct NovenaDayView: View {
+    let dayTitle: String
+    let prayer: String
+    let threePadreNuestros: String
+    let oracionesFinales: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("📅 \(dayTitle)")
+                .font(.headline)
+
+            Text(prayer)
+                .font(.body)
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(12)
+
+            if !threePadreNuestros.isEmpty {
+                Text(threePadreNuestros)
+                    .font(.body)
+                    .bold()
+                    .padding(.top)
+            }
+
+            Divider()
+
+            Text(oracionesFinales)
+                .font(.body)
+                .padding()
+                .background(Color(.tertiarySystemBackground))
+                .cornerRadius(12)
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        NovenaListView()
-    }
-}
-
-#Preview {
-    NavigationStack {
-        NovenaDetailView(novena: Novena.list[0])
+        NovenaDetailView(
+            novena: Novena(
+                id: UUID(),
+                title: "Sagrado Corazón de Jesús",
+                prayers: [
+                    DailyPrayer(id: UUID(), dayTitle: "Día 1", prayer: "Oh Corazón de Jesús, fuente inagotable de misericordia, te adoro y te ofrezco mis oraciones."),
+                    DailyPrayer(id: UUID(), dayTitle: "Día 2", prayer: "Corazón de Jesús, lleno de amor y compasión, derrama tus gracias sobre nosotros."),
+                    DailyPrayer(id: UUID(), dayTitle: "Día 3", prayer: "Corazón de Jesús, llama de amor viva, enciende en mí un fuego de amor por Ti"),
+                    DailyPrayer(id: UUID(), dayTitle: "Día 4", prayer: "Corazón de Jesús, refugio de los pecadores, ten piedad de nosotros."),
+                    DailyPrayer(id: UUID(), dayTitle: "Día 5", prayer: "Corazón de Jesús, esperanza de los enfermos, consuela a los que sufren."),
+                    DailyPrayer(id: UUID(), dayTitle: "Día 6", prayer: "Corazón de Jesús, paz y reconciliación de los corazones, restaura la unidad en nuestras familias."),
+                    DailyPrayer(id: UUID(), dayTitle: "Día 7", prayer: "Corazón de Jesús, fortaleza de los humildes, fortalece mi fe y confianza en Ti."),
+                    DailyPrayer(id: UUID(), dayTitle: "Día 8", prayer: "Corazón de Jesús, amigo de los niños y los pequeños, protégelos siempre."),
+                    DailyPrayer(id: UUID(), dayTitle: "Día 9", prayer: "Corazón de Jesús, reina y soberano de mi vida, recibe mi corazón y hazlo semejante al Tuyo.")
+                ],
+                threePadreNuestros: "Rezar 3 Padre Nuestros, 3 Avemarías.",
+                oracionesFinales: "Oraciones finales para concluir la novena."
+            ),
+            viewModel: NovenaViewModel()
+        )
     }
 }

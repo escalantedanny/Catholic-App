@@ -1,64 +1,60 @@
 import SwiftUI
 
 struct SpiritualToolsView: View {
-
     var body: some View {
-        //NavigationStack() {
-            VStack(spacing: 24) {
-                Text("📅 Herramientas de Organización Espiritual")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.center)
-                    .padding(.top)
-
-
-                NavigationLink(value: ToolEnumDestination.calendary) {
-                    ToolCardView(
-                        emoji: "📅",
-                        title: "Agenda litúrgica",
-                        description: "Calendario con festividades, santos del día y eventos litúrgicos."
-                    )
-                }
-
-                NavigationLink(value: ToolEnumDestination.remenber) {
-                    ToolCardView(
-                        emoji: "⏰",
-                        title: "Recordatorios de oración y confesión",
-                        description: "Notificaciones diarias o mensuales para rezar o confesarte."
-                    )
-                }
-
-                NavigationLink(value: ToolEnumDestination.prays) {
-                    ToolCardView(
-                        emoji: "🙏",
-                        title: "Planificador de novenas",
-                        description: "Selecciona una novena y recibe las oraciones diarias."
-                    )
-                }
-
-                Spacer()
+        VStack(spacing: 24) {
+            Text("📅 Herramientas de Organización Espiritual")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.center)
+                .padding(.top)
+            
+            NavigationLink(value: ToolEnumDestination.calendary) {
+                ToolCardView(
+                    emoji: "📅",
+                    title: "Agenda litúrgica",
+                    description: "Calendario con festividades, santos del día y eventos litúrgicos."
+                )
             }
-            .padding()
-            // ✅ Maneja los destinos con enum
-            .navigationDestination(for: ToolEnumDestination.self) { destination in
-                switch destination {
-                case .calendary:
-                    LiturgicalAgendaView()
-                case .remenber:
-                    if #available(iOS 18.0, *) {
-                        PrayerAndConfessionReminderView()
-                    } else {
-                        Text("Disponible solo en iOS 18 o superior")
-                    }
-                case .prays:
-                    if #available(iOS 18.0, *) {
-                        NovenaListView()
-                    } else {
-                        Text("Disponible solo en iOS 18 o superior")
-                    }
+            
+            NavigationLink(value: ToolEnumDestination.remenber) {
+                ToolCardView(
+                    emoji: "⏰",
+                    title: "Recordatorios de oración y confesión",
+                    description: "Notificaciones diarias o mensuales para rezar o confesarte."
+                )
+            }
+            
+            NavigationLink(value: ToolEnumDestination.prays) {
+                ToolCardView(
+                    emoji: "🙏",
+                    title: "Planificador de novenas",
+                    description: "Selecciona una novena y recibe las oraciones diarias."
+                )
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .navigationDestination(for: ToolEnumDestination.self) { destination in
+            switch destination {
+            case .calendary:
+                LiturgicalAgendaView()
+            case .remenber:
+                if #available(iOS 18.0, *) {
+                    PrayerAndConfessionReminderView()
+                } else {
+                    // Fallback on earlier versions
+                }
+            case .prays:
+                if #available(iOS 18.0, *) {
+                    NovenaSelectorView()
+                } else {
+                    // Fallback on earlier versions
                 }
             }
-        //}
+        }
+        
     }
 }
 
@@ -100,24 +96,5 @@ struct ToolCardView: View {
 }
 
 #Preview {
-    SpiritualToolsPreviewWrapper()
-}
-
-struct SpiritualToolsPreviewWrapper: View {
-    var body: some View {
-        NavigationStack {
-            SpiritualToolsView()
-                .navigationDestination(for: ToolEnumDestination.self) { destination in
-                    // ✅ Solo textos simples para el preview
-                    switch destination {
-                    case .calendary:
-                        Text("Vista Agenda litúrgica")
-                    case .remenber:
-                        Text("Vista Recordatorios")
-                    case .prays:
-                        Text("Vista Novenas")
-                    }
-                }
-        }
-    }
+    SpiritualToolsView()
 }
