@@ -99,7 +99,7 @@ struct ChapterDetailView: View {
                                         }
                                     }
                                     
-                                    Spacer(minLength: 32) // Espacio entre los botones
+                                    Spacer(minLength: 32)
 
                                     Button {
                                         navigationPath.removeLast(navigationPath.count)

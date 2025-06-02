@@ -61,7 +61,7 @@ struct ShowBodyView: View {
                                 FavoriteVersesView()
                             case .resources:
                                 FavoriteVersesView()
-                            case .functions:
+                            case .funciones:
                                 FavoriteVersesView()
                             case .community:
                                 FavoriteVersesView()

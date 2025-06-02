@@ -27,7 +27,7 @@ class ToolsServiceImpl: IToolsService {
             return self.eventList
         }
 
-        guard let url = URL(string: "https://bible-api-a2sa.onrender.com/libros/santos/hoy/\(month)/\(day)") else {
+        guard let url = URL(string: "\(Constants.urls.saints)\(month)/\(day)") else {
             throw URLError(.badURL)
         }
 
@@ -40,7 +40,6 @@ class ToolsServiceImpl: IToolsService {
 
             let santos = try JSONDecoder().decode([SantoResponse].self, from: data)
 
-            // Guarda en caché
             self.cache.save(santos, forKey: cacheKey, expiration: .never)
 
             self.eventList = santos.map { santo in
