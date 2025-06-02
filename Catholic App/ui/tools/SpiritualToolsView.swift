@@ -10,21 +10,28 @@ struct SpiritualToolsView: View {
                     .multilineTextAlignment(.center)
                     .padding(.top)
 
+                    NavigationLink(destination: LiturgicalAgendaView()) {
+                        ToolCardView(
+                            emoji: "📅",
+                            title: "Agenda litúrgica",
+                            description: "Calendario con festividades, santos del día y eventos litúrgicos."
+                        )
+                    }
+                    .buttonStyle(PlainButtonStyle())
 
-                    ToolCardView(
-                        emoji: "📅",
-                        title: "Agenda litúrgica",
-                        description: "Calendario con festividades, santos del día y eventos litúrgicos."
-                    )
-                
 
-
-                    ToolCardView(
-                        emoji: "⏰",
-                        title: "Recordatorios de oración y confesión",
-                        description: "Notificaciones diarias o mensuales para rezar o confesarte."
-                    )
-                
+                    if #available(iOS 18.0, *) {
+                        NavigationLink(destination: PrayerAndConfessionReminderView()) {
+                            ToolCardView(
+                                emoji: "⏰",
+                                title: "Recordatorios de oración y confesión",
+                                description: "Notificaciones diarias o mensuales para rezar o confesarte."
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    } else {
+                        // Fallback on earlier versions
+                    }
 
 
                     ToolCardView(

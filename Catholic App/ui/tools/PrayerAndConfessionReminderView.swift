@@ -3,13 +3,15 @@ import UserNotifications
 
 @available(iOS 18.0, *)
 struct PrayerAndConfessionReminderView: View {
-    @AppStorage("morningPrayerEnabled") private var morningPrayerEnabled = true
+    @AppStorage("morningPrayerEnabled") private var morningPrayerEnabled = false
     @AppStorage("morningPrayerTime") private var morningPrayerTime = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())!
 
-    @AppStorage("nightPrayerEnabled") private var nightPrayerEnabled = true
+    @AppStorage("nightPrayerEnabled") private var nightPrayerEnabled = false
     @AppStorage("nightPrayerTime") private var nightPrayerTime = Calendar.current.date(bySettingHour: 21, minute: 0, second: 0, of: Date())!
 
-    @AppStorage("confessionReminderEnabled") private var confessionReminderEnabled = true
+    @AppStorage("confessionReminderEnabled") private var confessionReminderEnabled = false
+    @State private var showConfirmation = false
+
 
     var body: some View {
         Form {
@@ -33,9 +35,13 @@ struct PrayerAndConfessionReminderView: View {
                 Button("Guardar recordatorios") {
                     requestNotificationPermissions()
                     scheduleAllReminders()
+                    showConfirmation = true
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
             }
+        }
+        .alert("✅ Recordatorios guardados", isPresented: $showConfirmation) {
+            Button("OK", role: .cancel) { }
         }
         .navigationTitle("Recordatorios")
     }

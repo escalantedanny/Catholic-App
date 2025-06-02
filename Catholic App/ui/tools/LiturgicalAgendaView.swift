@@ -1,8 +1,13 @@
 import SwiftUI
+import Resolver
 
 struct LiturgicalAgendaView: View {
     @State private var selectedDate = Date()
-    @State private var events: [LiturgicalEvent] = [] // Aquí cargarás los eventos
+    @State private var events: [LiturgicalEvent] = []
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+
+    @StateObject private var viewModel: ToolsViewModel = Resolver.resolve()
 
     var body: some View {
         NavigationView {
@@ -10,42 +15,73 @@ struct LiturgicalAgendaView: View {
                 DatePicker("Selecciona una fecha", selection: $selectedDate, displayedComponents: .date)
                     .datePickerStyle(.graphical)
                     .padding()
+                    .onChange(of: selectedDate) { oldDate, newDate in
+                        loadEvents(for: newDate)
+                    }
 
-                List {
-                    ForEach(eventsForSelectedDate) { event in
-                        VStack(alignment: .leading) {
-                            Text(event.title)
-                                .font(.headline)
-                            Text(event.description)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            Text(event.type.rawValue.capitalized)
-                                .font(.caption)
-                                .foregroundColor(.blue)
+                if isLoading {
+                    ProgressView("Cargando eventos...")
+                        .padding()
+                } else if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                } else if events.isEmpty {
+                    Text("No hay eventos litúrgicos para esta fecha.")
+                        .foregroundColor(.gray)
+                        .padding()
+                } else {
+                    List {
+                        ForEach(events) { event in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(event.title)
+                                    .font(.headline)
+
+                                Text(event.description)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+
+                                if let link = event.link, let url = URL(string: link) {
+                                    Text("Conocer más sobre este santo")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                        .onTapGesture {
+                                            UIApplication.shared.open(url)
+                                        }
+                                } else {
+                                    Text("Conocer más sobre este santo")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                            .padding(.vertical, 4)
                         }
-                        .padding(.vertical, 4)
                     }
                 }
             }
             .navigationTitle("Agenda Litúrgica")
-            .onAppear(perform: loadDummyEvents)
+            .onAppear {
+                loadEvents(for: selectedDate)
+            }
         }
     }
 
-    private var eventsForSelectedDate: [LiturgicalEvent] {
-        events.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
-    }
+    private func loadEvents(for date: Date) {
+        isLoading = true
+        errorMessage = nil
 
-    private func loadDummyEvents() {
-        // Por ahora solo ejemplos, luego los cargarás desde tu base de datos o API
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
+        let calendar = Calendar.current
+        let day = calendar.component(.day, from: date)
+        let month = calendar.component(.month, from: date)
 
-        events = [
-            LiturgicalEvent(date: formatter.date(from: "2025/05/30")!, title: "San Fernando", description: "Festividad de San Fernando, rey y confesor", type: .saint),
-            LiturgicalEvent(date: formatter.date(from: "2025/05/30")!, title: "Santa Misa", description: "Misa del día común", type: .solemnity),
-            LiturgicalEvent(date: formatter.date(from: "2025/05/31")!, title: "Visitación de la Virgen María", description: "Fiesta litúrgica", type: .feast)
-        ]
+        Task {
+            let fetchedEvents = await viewModel.fetchSaintsOfDay(month: month, day: day)
+            DispatchQueue.main.async {
+                self.events = fetchedEvents
+                self.isLoading = false
+            }
+        }
     }
 }
 
