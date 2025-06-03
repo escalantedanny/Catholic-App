@@ -167,7 +167,7 @@ class BibleServiceImpl: IBibleService {
     
     func fetchDetailBook(libro: String, chapter: Int, retryCount: Int) async throws -> ChapterResponse {
         
-        guard let url = URL(string: "https://bible-api-a2sa.onrender.com/libros/\(libro)/capitulos/\(chapter)") else {
+        guard let url = URL(string: "\(Constants.urls.base)/\(libro)/capitulos/\(chapter)") else {
             throw URLError(.badURL)
         }
         
@@ -244,6 +244,44 @@ class BibleServiceImpl: IBibleService {
                 }
             }
         }
+        throw URLError(.cannotLoadFromNetwork)
+    }
+    
+    func fetchFaithEvents(retryCount: Int) async throws -> [FaithEvent] {
+        
+        guard let url = URL(string: "https://bible-api-a2sa.onrender.com/libros/events") else {
+            throw URLError(.badURL)
+        }
+
+        if let cachedEvents: [FaithEvent] = self.cache.get(forKey: "FAITH_EVENTS") {
+            print("📦 Eventos cargados desde caché")
+            return cachedEvents
+        }
+
+        // Reintentos en caso de fallo
+        for attempt in 1...retryCount {
+            do {
+                let (data, _) = try await session.data(from: url)
+
+                let decoder = JSONDecoder()
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                decoder.dateDecodingStrategy = .formatted(formatter)
+
+                let events = try decoder.decode([FaithEvent].self, from: data)
+                self.cache.save(events, forKey: "FAITH_EVENTS", expiration: .never)
+
+                print("✅ Eventos cargados correctamente")
+                return events
+            } catch {
+                print("❌ Error intento \(attempt): \(error.localizedDescription)")
+
+                if attempt < retryCount {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000) // Espera 1 segundo
+                }
+            }
+        }
+
         throw URLError(.cannotLoadFromNetwork)
     }
     

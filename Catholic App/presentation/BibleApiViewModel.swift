@@ -10,12 +10,14 @@ class BibleApiViewModel: ObservableObject {
     @Published var chapter: ChapterResponse?
     @Published var evangelio: EvangelioResponse?
     @Published var favoritos: [Versiculo] = []
+    @Published var faithEvents: [FaithEvent] = []
 
     private let bibleService: IBibleService
     
     init (bibleService: IBibleService) {
         self.bibleService = bibleService
         self.favoritos = favoritos
+        self.faithEvents = faithEvents
         loadFavoritosFromCache()
     }
     
@@ -101,6 +103,15 @@ class BibleApiViewModel: ObservableObject {
             self.book = try await bibleService.fetchLibro(libro: libro, retryCount: retryCount)
         } catch {
             print("❌ Error al obtener los libros: \(error)")
+        }
+    }
+    
+    @MainActor
+    func loadEvents(retryCount: Int = 3) async {
+        do {
+            self.faithEvents = try await bibleService.fetchFaithEvents(retryCount: retryCount)
+        } catch {
+            print("❌ Error: \(error)")
         }
     }
     

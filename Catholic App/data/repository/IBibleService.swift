@@ -11,4 +11,5 @@ protocol IBibleService {
     func fetchDetailBook(libro: String, chapter: Int, retryCount: Int) async throws -> ChapterResponse
     func fetchLibros(retryCount: Int) async throws -> [String]
     func fetchLibro(libro: String, retryCount: Int) async throws -> BookResponse
+    func fetchFaithEvents(retryCount: Int) async throws -> [FaithEvent]
 }

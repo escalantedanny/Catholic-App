@@ -28,6 +28,7 @@ struct Constants {
     }
     
     struct urls {
+        static let base = "https://bible-api-a2sa.onrender.com/libros"
         static let checkHealth = "https://bible-api-a2sa.onrender.com/libros/ping"
         static let randomVersicles = "https://bible-api-a2sa.onrender.com/libros/versiculos/aleatorios"
         static let books = "https://bible-api-a2sa.onrender.com/libros"
