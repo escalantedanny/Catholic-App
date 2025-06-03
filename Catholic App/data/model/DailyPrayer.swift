@@ -1,4 +1,6 @@
 import Foundation
+import SwiftUICore
+import MapKit
 
 struct DailyPrayer: Identifiable, Codable, Hashable {
     let id: UUID
@@ -16,6 +18,34 @@ struct Novena: Identifiable, Codable, Hashable {
     static func getNovenas() -> [Novena] {
         return Novena.list
     }
+}
+
+struct LiturgicalCycleInfo {
+    let liturgicalColor: LiturgicalColor
+    let season: String // "Adviento", "Navidad", etc.
+    let yearCycle: String // "A", "B", o "C"
+}
+
+enum LiturgicalColor: String {
+    case green = "Verde"
+    case red = "Rojo"
+    case purple = "Morado"
+    case white = "Blanco"
+
+    var colorValue: Color {
+        switch self {
+        case .green: return .green
+        case .red: return .red
+        case .purple: return .purple
+        case .white: return .white
+        }
+    }
+}
+
+struct CountdownEvent: Identifiable {
+    let id = UUID()
+    let title: String
+    let targetDate: Date
 }
 
 extension Novena {

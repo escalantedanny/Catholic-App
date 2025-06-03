@@ -58,13 +58,11 @@ struct ShowBodyView: View {
                             case .tools:
                                 SpiritualToolsView()
                             case .games:
-                                FavoriteVersesView()
+                                TriviaView()
                             case .resources:
-                                FavoriteVersesView()
-                            case .funciones:
-                                FavoriteVersesView()
+                                ResourcesView()
                             case .community:
-                                FavoriteVersesView()
+                                CommunityConnectionView()
                         }
                     }
                                         

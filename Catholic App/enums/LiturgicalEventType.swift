@@ -11,6 +11,7 @@ struct LiturgicalEvent: Identifiable, Codable {
     let description: String
     let type: LiturgicalEventType
     let link: String?
+    let img: String
 }
 
 // Modelo para decodificar la respuesta del backend
@@ -20,6 +21,7 @@ struct SantoResponse: Codable {
     let date: String  // ej: "23 de febrero"
     let day: Int
     let link: String
+    let img: String
 
     // Si quieres, puedes agregar un computed property para convertir el string "23 de febrero" en Date:
     var dateAsDate: Date? {

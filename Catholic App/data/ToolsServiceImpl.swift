@@ -21,7 +21,8 @@ class ToolsServiceImpl: IToolsService {
                     title: santo.name,
                     description: santo.description,
                     type: .saint,
-                    link: santo.link
+                    link: santo.link,
+                    img: santo.img
                 )
             }
             return self.eventList
@@ -48,7 +49,8 @@ class ToolsServiceImpl: IToolsService {
                     title: santo.name,
                     description: santo.description,
                     type: .saint,
-                    link: santo.link
+                    link: santo.link,
+                    img: santo.img
                 )
             }
 
@@ -65,7 +67,8 @@ class ToolsServiceImpl: IToolsService {
                         title: santo.name,
                         description: santo.description,
                         type: .saint,
-                        link: santo.link
+                        link: santo.link,
+                        img: santo.img
                     )
                 }
                 return self.eventList

@@ -51,7 +51,6 @@ struct Constants {
             MenuItemModel(title: "Herramientas", emoji: "🧰", destination: .tools),
             MenuItemModel(title: "Juegos", emoji: "🎮", destination: .games),
             MenuItemModel(title: "Recursos", emoji: "📚", destination: .resources),
-            MenuItemModel(title: "Funciones", emoji: "⚙️", destination: .funciones),
             MenuItemModel(title: "Comunidad", emoji: "🤝", destination: .community),
         ]
     }
