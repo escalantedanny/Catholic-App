@@ -5,23 +5,54 @@ struct NovenaSelectorView: View {
     @StateObject private var viewModel = NovenaViewModel()
 
     var body: some View {
-        if let novena = viewModel.activeNovena {
-            NavigationLink(destination: NovenaDetailView(viewModel: viewModel)) {
-                Text("Continuar novena: \(novena.title)")
-                    .padding()
-                    .font(.headline)
+        VStack {
+            if let novena = viewModel.activeNovena {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Novena en curso")
+                        .font(.title2)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    NavigationLink(destination: NovenaDetailView(viewModel: viewModel)) {
+                        HStack {
+                            Image(systemName: "flame.fill")
+                                .foregroundColor(.white)
+                            Text("Continuar: \(novena.title)")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        .padding()
+                        .background(Color.indigo)
+                        .cornerRadius(12)
+                    }
+                }
+                .padding()
             }
-            .navigationTitle("Mi Novena")
-        } else {
-            List(viewModel.novenas) { novena in
-                NavigationLink(destination: NovenaDetailView(novena: novena, viewModel: viewModel)) {
-                    Text(novena.title)
+
+            List {
+                Section(header: Text("Todas las novenas").font(.headline)) {
+                    ForEach(viewModel.novenas) { novena in
+                        NavigationLink(destination: NovenaDetailView(novena: novena, viewModel: viewModel)) {
+                            VStack(alignment: .leading) {
+                                Text(novena.title)
+                                    .font(.body)
+                                Text("9 días de oración")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
                 }
             }
-            .navigationTitle("Elige una Novena")
+            .listStyle(.insetGrouped)
         }
-        
+        .navigationTitle("🙏 Novenas")
     }
+    
 }
 
 struct NovenaDetailView: View {
