@@ -3,102 +3,159 @@ import SwiftUI
 struct RosarioView: View {
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Aprenda el paso a paso para rezar el Rosario")
-                    .font(.title)
+            VStack(alignment: .leading, spacing: 24) {
+
+                Text("🕊️ Rosario")
+                    .font(.largeTitle)
                     .bold()
-                    .padding(.bottom, 8)
 
+                Text("Este Rosario se reza en comunidad, acompañando a María en la contemplación de la vida de su Hijo. Abre tu corazón y deja que el Espíritu Santo te guíe.")
+                    .font(.body)
+
+                Divider()
+
+                // Disposición inicial
                 Group {
-                    Text("📿 Los Misterios")
-                        .font(.headline)
+                    Text("🙏 Disposición espiritual")
+                        .font(.title2).bold()
 
-                    Text("El Rosario está compuesto por 20 \"misterios\" (momentos significativos) de la vida de Jesús y de María, divididos desde la publicación de la Carta apostólica *Rosarium Virginis Mariae* en cuatro \"rosarios\".")
+                    bullet("Haz la señal de la cruz.")
+                    bullet("Pide al Espíritu Santo que te acompañe.")
+                    bullet("Ofrece el Rosario por una intención concreta (personal, comunitaria o del mundo).")
+                }
+
+                // Misterios
+                Group {
+                    Text("📿 Misterios del Rosario")
+                        .font(.title2).bold()
+
+                    VStack(alignment: .leading, spacing: 16) {
+                        mysterySection(title: "✨ Misterios Gozosos", days: "Lunes y Sábado", intentions: [
+                            "La Encarnación del Hijo de Dios",
+                            "La Visitación de María a su prima Isabel",
+                            "El nacimiento del Hijo de Dios en Belén",
+                            "La presentación de Jesús en el Templo",
+                            "El Niño Jesús perdido y hallado en el Templo"
+                        ])
+                        
+                        mysterySection(title: "😢 Misterios Dolorosos", days: "Martes y Viernes", intentions: [
+                            "La oración de Jesús en el Huerto",
+                            "La flagelación del Señor",
+                            "La coronación de espinas",
+                            "Jesús carga con la cruz",
+                            "La crucifixión y muerte de Jesús"
+                        ])
+                        
+                        mysterySection(title: "🎉 Misterios Gloriosos", days: "Miércoles y Domingo", intentions: [
+                            "La Resurrección del Señor",
+                            "La Ascensión al cielo",
+                            "La venida del Espíritu Santo",
+                            "La Asunción de María",
+                            "La Coronación de María como Reina del cielo"
+                        ])
+                        
+                        mysterySection(title: "🌟 Misterios Luminosos", days: "Jueves", intentions: [
+                            "El Bautismo en el Jordán",
+                            "Las bodas de Caná",
+                            "El anuncio del Reino de Dios",
+                            "La Transfiguración",
+                            "La institución de la Eucaristía"
+                        ])
+                    }
+                }
+
+                // Cómo se reza
+                Group {
+                    Text("🛐 Estructura de una decena")
+                        .font(.title2).bold()
 
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("✨ Misterios Gozosos (lunes y sábado)")
-                            .bold()
-                        bullet("La Encarnación del Hijo de Dios")
-                        bullet("La Visitación de nuestra Señora a su prima Isabel")
-                        bullet("El nacimiento del Hijo de Dios en el portal de Belén")
-                        bullet("La presentación de Jesús en el Templo")
-                        bullet("El Niño Jesús perdido y hallado en el Templo")
 
-                        Text("😢 Misterios Dolorosos (martes y viernes)")
-                            .bold().padding(.top)
-                        bullet("La oración en el Huerto")
-                        bullet("La flagelación de Jesús atado a la columna")
-                        bullet("La coronación de espinas")
-                        bullet("Jesús con la cruz a cuestas camino del Calvario")
-                        bullet("La crucifixión y muerte de Jesús")
+                        callAndResponse("Ini:", "Padre Nuestro…")
+                        callAndResponse("Res:", "Danos hoy nuestro pan de cada día…")
 
-                        Text("🎉 Misterios Gloriosos (miércoles y domingo)")
-                            .bold().padding(.top)
-                        bullet("La Resurrección del Hijo de Dios")
-                        bullet("La Ascensión del Señor al cielo")
-                        bullet("La venida del Espíritu Santo")
-                        bullet("La Asunción de María al cielo")
-                        bullet("La Coronación de María como Reina y Señora de todo lo creado")
+                        callAndResponse("Ini:", "Dios te salve María")
+                        callAndResponse("Res:", "Santa María Madre de Dios…")
 
-                        Text("🌟 Misterios Luminosos (jueves)")
-                            .bold().padding(.top)
-                        bullet("El Bautismo en el Jordán")
-                        bullet("Las bodas de Caná")
-                        bullet("El anuncio del Reino de Dios")
-                        bullet("La Transfiguración")
-                        bullet("La instauración de la Eucaristía")
+                        callAndResponse("Ini:", "Gloria al Padre, al Hijo y al Espíritu Santo…")
+                        callAndResponse("Res:", "Como era en el principio...")
+
+                        callAndResponse("Ini:", "María es Madre de gracia y Madre de misericordia")
+                        callAndResponse("Res:", "En la vida y en la muerte ampáranos dulce madre")
+
+                        callAndResponse("Ini:", "Alabanzas y gracias sean dadas en todo momento al Santísimo y Divinísimo Sacramento del altar")
+                        callAndResponse("Res:", "Y bendita sea por siempre la Santa Inmaculada Concepción de la bienaventurada siempre Virgen María Madre de Dios y Madre nuestra.")
+
+                        callAndResponse("Ini:", "Oh, Jesús mío perdona nuestros pecados líbranos del fuego del infierno lleva al cielo a todas las almas especialmente a las más necesitadas de tu infinita misericordia. Amén.")
+
+                        callAndResponse("Ini:", "Sagrado Corazón de Jesús")
+                        callAndResponse("Res:", "En vos confío.")
+
+                        callAndResponse("Ini:", "Dulce Corazón de María")
+                        callAndResponse("Res:", "Sé la salvación del alma mía.")
+
+                        callAndResponse("Ini:", "San José")
+                        callAndResponse("Res:", "Ruega por nosotros.")
                     }
                 }
 
                 Group {
-                    Text("🙏 ¿Cómo se reza?")
-                        .font(.headline)
-                        .padding(.top)
+                    Text("🕯️ Final del Rosario")
+                        .font(.title2).bold()
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("1. Inicio: señal de la cruz y acto de contrición.")
-                        Text("Por la señal de la Santa Cruz, de nuestros enemigos líbranos Señor Dios Nuestro. En el nombre del Padre, del Hijo y del Espíritu Santo. Amén.")
-                        Text("Señor mío Jesucristo, Dios y hombre verdadero, Creador, Padre y Redentor mío... (oración completa).")
-                        
-                        Text("2. Rezar el Padre Nuestro.")
-                        Text("3. Rezar 3 Avemarías y un Gloria al Padre.")
-                        Text("4. Anunciar el primer misterio. Rezar el Padrenuestro.")
-                        Text("5. Rezar 10 Avemarías y un Gloria al Padre.")
-                        Text("6. Rezar un María, Madre de gracia y un Oh, Jesús Mío.")
-                        Text("María, Madre de gracia, Madre de misericordia...")
-                        Text("Oh Jesús mío, perdónanos...")
-
-                        Text("7. Repetir para el segundo, tercero, cuarto y quinto misterio.")
-                        Text("8. Rezar letanías de la Santísima Virgen.")
-                        Text("9. Rezar el Cordero de Dios:")
-                        Text("Cordero de Dios, que quitas el pecado del mundo...")
-
-                        Text("10. Rezar las intenciones del Santo Padre:")
-                        Text("Padre nuestro, que estás en el cielo...")
-
-                        Text("11. Rezar el Salve a la Virgen María.")
-                        Text("12. Jaculatoria final: Ave María Purísima. Sin pecado concebida.")
-                        Text("13. Señal de la cruz y santiguamiento.")
-                    }
+                    bullet("Oración a San Miguel Arcángel.")
+                    bullet("Salve.")
+                    Text("Oración final")
+                        .bold()
+                    bullet("Bajo tu protección nos acogemos Santa Madre de Dios, no desprecies nuestras súplicas en nuestras necesidades; antes bien, líbranos siempre de todos los peligros, Oh, Virgen gloriosa y bendita.\nEn el nombre del Padre, del Hijo y del Espíritu Santo Amén.")
                 }
             }
             .padding()
         }
-        .background(Color(.systemBackground))
+        .navigationTitle("El Santo Rosario")
+        .background(Color(.systemGroupedBackground))
     }
 
-    // Helper function to create bullet points
+    // MARK: - Bullet helper
     @ViewBuilder
     func bullet(_ text: String) -> some View {
         HStack(alignment: .top) {
-            Text("•")
+            Text("•").bold()
             Text(text)
         }
+    }
+    
+    @ViewBuilder
+    func callAndResponse(_ label: String, _ text: String) -> some View {
+        HStack(alignment: .top) {
+            Text(label)
+                .fontWeight(.semibold)
+                .foregroundColor(.accentColor)
+            Text(text)
+        }
+    }
+
+    // MARK: - Misterios
+    @ViewBuilder
+    func mysterySection(title: String, days: String, intentions: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+            Text("Se rezan los \(days).")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+
+            ForEach(intentions, id: \.self) { intention in
+                bullet(intention)
+            }
+        }
+        .padding(.vertical, 8)
     }
 }
 
 #Preview {
-    RosarioView()
-        .environment(\.colorScheme, .dark)
-
+    NavigationStack {
+        RosarioView()
+            .environment(\.colorScheme, .dark)
+    }
 }
