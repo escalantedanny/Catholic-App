@@ -56,15 +56,13 @@ struct ShowBodyView: View {
                             case .favorites:
                                 FavoriteVersesView()
                             case .tools:
-                                FavoriteVersesView()
+                                SpiritualToolsView()
                             case .games:
-                                FavoriteVersesView()
+                                TriviaView()
                             case .resources:
-                                FavoriteVersesView()
-                            case .functions:
-                                FavoriteVersesView()
+                                ResourcesView()
                             case .community:
-                                FavoriteVersesView()
+                                CommunityConnectionView()
                         }
                     }
                                         
@@ -119,7 +117,9 @@ struct ShowBodyView: View {
                                 }
                                 if viewModel.isFavorite(versiculo) {
                                     Button {
-                                        viewModel.deleteFavorite(versiculo: versiculo)
+                                        Task {
+                                            await viewModel.deleteFavorite(versiculo: versiculo)
+                                        }
                                     } label: {
                                         Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
                                     }

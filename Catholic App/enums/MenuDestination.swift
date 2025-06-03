@@ -5,6 +5,5 @@ enum MenuDestination: Hashable {
     case tools
     case games
     case resources
-    case functions
     case community
 }

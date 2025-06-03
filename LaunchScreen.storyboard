@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="SplashImage" translatesAutoresizingMaskIntoConstraints="NO" id="Tph-ix-CtV">
-                                <rect key="frame" x="0.0" y="287" width="393" height="278"/>
+                                <rect key="frame" x="-6" y="316" width="393" height="268"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.99327558279999995" green="0.98645192380000002" blue="0.96837979559999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </imageView>

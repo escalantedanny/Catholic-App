@@ -15,11 +15,14 @@ extension Resolver {
         register { CacheManager() }.scope(.application)
         register { CacheManager() as CacheService }.scope(.application)
         register { HealthServiceImpl() as IHealthService }.scope(.application)
+        register { ToolsServiceImpl(cache: resolve()) as IToolsService }.scope(.application)
         register { BibleServiceImpl(cache: resolve()) as IBibleService }.scope(.application)
     }
     
     static func registerViewModels() {
         register { CheckHealthModel(healthService: resolve()) }
-        register { BibleApiViewModel(cache: resolve() as CacheManager, bibleService: resolve()) }
+        register { BibleApiViewModel(bibleService: resolve()) }
+        register { ToolsViewModel(toolsService: resolve()) }
+
     }
 }

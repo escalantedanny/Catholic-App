@@ -13,7 +13,6 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .leading) {
-                Color.white.ignoresSafeArea()
                 VStack(spacing: 0) {
 
                     TopBarView(showMenu: $showMenu)
@@ -97,5 +96,5 @@ struct TopBarView: View {
 
 #Preview {
     ContentView()
-       // .environment(\.colorScheme, .dark)
+       .environment(\.colorScheme, .dark)
 }

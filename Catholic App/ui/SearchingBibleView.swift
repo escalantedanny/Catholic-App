@@ -47,7 +47,9 @@ struct SearchingBibleView: View {
                                             viewModel.saveFavoriteVersicle(versiculo: versiculo)
                                         },
                                         onRemoveFavorite: {
-                                            viewModel.deleteFavorite(versiculo: versiculo)
+                                            Task {
+                                                await viewModel.deleteFavorite(versiculo: versiculo)
+                                            }
                                         }
                                     )
                                 }
