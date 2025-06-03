@@ -2,70 +2,74 @@ import SwiftUI
 import CacheManager
 import Resolver
 
-struct SideMenuView: View {
 
+struct SideMenuView: View {
     @Binding var showMenu: Bool
     @Binding var selectedTab: Int
-    @Binding var navigationPath : NavigationPath
+    @Binding var navigationPath: NavigationPath
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .center) {
+        VStack(alignment: .leading, spacing: 20) {
+            // Logo centrado
+            HStack {
                 Spacer()
                 Image("new_logo_app")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: .infinity, height: .infinity)
+                    .scaledToFit()
+                    .frame(height: 100)
                 Spacer()
             }
 
-                
-            LinearGradient(gradient: Gradient(colors: [Color.gray, Color.gray]), startPoint: .top, endPoint: .bottom)
-                .frame(width: .infinity, height: 1)
-                .cornerRadius(8)
-            
-            Button{
-                selectedTab = 0
-            } label: {
-                Label(Constants.Titles.home, systemImage: Constants.Icons.home)
-                    .foregroundColor(.black)
-                    .onTapGesture {
-                        withAnimation {
-                            showMenu = false
-                        }
-                    }
-            }
-            Button {
-                navigationPath.append(MenuDestinationTop.settings)
-            } label: {
-                Label(Constants.Titles.settings, systemImage: Constants.Icons.gear)
-                    .foregroundColor(.black)
-                    .onTapGesture {
-                        withAnimation {
-                            showMenu = false
-                        }
-                    }
-            }
-            Button {
-                navigationPath.append(MenuDestinationTop.logout)
-            } label: {
-                Label(Constants.Titles.closeCession, systemImage: Constants.Icons.arrowBackward)
-                    .foregroundColor(.black)
-                    .onTapGesture {
-                        withAnimation {
-                            showMenu = false
-                        }
-                    }
+            Divider()
+
+            // Opciones del menú
+            Group {
+                menuItem(
+                    title: Constants.Titles.home,
+                    systemImage: Constants.Icons.home
+                ) {
+                    selectedTab = 0
+                    closeMenu()
+                }
+
+                menuItem(
+                    title: Constants.Titles.settings,
+                    systemImage: Constants.Icons.gear
+                ) {
+                    navigationPath.append(MenuDestinationTop.settings)
+                    closeMenu()
+                }
+
+                menuItem(
+                    title: Constants.Titles.closeCession,
+                    systemImage: Constants.Icons.arrowBackward
+                ) {
+                    navigationPath.append(MenuDestinationTop.logout)
+                    closeMenu()
+                }
             }
 
             Spacer()
         }
         .padding(.top, 60)
         .padding(.horizontal, 16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .frame(width: 250)
+        .frame(width: 250, alignment: .leading)
         .background(Color(.systemBackground))
         .edgesIgnoringSafeArea(.all)
+    }
+
+    private func menuItem(title: String, systemImage: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: systemImage)
+                .foregroundColor(.primary)
+                .padding(.vertical, 4)
+        }
+    }
+
+    private func closeMenu() {
+        withAnimation {
+            showMenu = false
+        }
     }
 }
 
