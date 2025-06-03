@@ -148,6 +148,38 @@ extension Novena {
 
             Oh Dios, cuya misericordia es infinita y cuyos tesoros de compasión no tienen límites, míranos con tu favor y aumenta tu misericordia en nosotros, para que en momentos difíciles no desesperemos ni nos desalentemos, sino que con gran confianza nos sometamos a tu santa voluntad, que es amor y misericordia mismos. Amén.
             """
+        ),
+        Novena(
+            id: UUID(),
+            title: "Novena al Espíritu Santo",
+            prayers: [
+                DailyPrayer(id: UUID(), dayTitle: "Día 1", prayer: "Espíritu Santo, Señor de luz, ilumina nuestro corazón. Ven y danos tu gracia para comprender la voluntad del Padre."),
+                DailyPrayer(id: UUID(), dayTitle: "Día 2", prayer: "Espíritu Santo, Espíritu de Sabiduría, enséñanos a amar lo que es verdadero y eterno."),
+                DailyPrayer(id: UUID(), dayTitle: "Día 3", prayer: "Espíritu Santo, Espíritu de Entendimiento, abre nuestras mentes para conocer la verdad divina."),
+                DailyPrayer(id: UUID(), dayTitle: "Día 4", prayer: "Espíritu Santo, Espíritu de Consejo, guía nuestros pasos en los momentos de dificultad."),
+                DailyPrayer(id: UUID(), dayTitle: "Día 5", prayer: "Espíritu Santo, Espíritu de Fortaleza, danos fuerza para cumplir con valentía la voluntad de Dios."),
+                DailyPrayer(id: UUID(), dayTitle: "Día 6", prayer: "Espíritu Santo, Espíritu de Ciencia, muéstranos el camino que lleva a la vida eterna."),
+                DailyPrayer(id: UUID(), dayTitle: "Día 7", prayer: "Espíritu Santo, Espíritu de Piedad, llena nuestro corazón de amor filial hacia Dios."),
+                DailyPrayer(id: UUID(), dayTitle: "Día 8", prayer: "Espíritu Santo, Espíritu de Temor de Dios, haz que no nos alejemos nunca de su amor."),
+                DailyPrayer(id: UUID(), dayTitle: "Día 9", prayer: "Espíritu Santo, dona tus siete dones, fortalece nuestra fe y enciende en nosotros el fuego de tu amor.")
+            ],
+            threePadreNuestros: """
+            Rezar tres veces:
+            
+            Padre Nuestro, Ave María y Gloria.
+            """,
+            oracionesFinales: """
+            ORACIÓN FINAL
+
+            Ven, Espíritu Santo, llena los corazones de tus fieles y enciende en ellos el fuego de tu amor.
+            Envía, Señor, tu Espíritu y todo será creado.
+            Y renovarás la faz de la tierra.
+
+            Oremos:
+            Oh Dios, que has instruido los corazones de tus fieles con la luz del Espíritu Santo,
+            concédenos que sintamos rectamente con el mismo Espíritu y gocemos siempre de su divino consuelo.
+            Por Cristo nuestro Señor. Amén.
+            """
         )
     ]
 }
