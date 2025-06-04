@@ -1,7 +1,7 @@
 import SwiftUICore
 struct Constants {
     struct Titles {
-        static let appName = "Catholic App"
+        static let appName = "Fe +"
         static let home = "Inicio"
         static let search = "Busqueda"
         static let searching = "Buscando"
@@ -40,27 +40,31 @@ struct Constants {
     
     struct keys {
         static let list = [
-            ("Favoritos", "⭐", "FV"),
-            ("Funcionalidades Espirituales", "🙏", "FE"),
-            ("Recursos y Formación", "📚", "RF"),
-            ("Herramientas de Organización Espiritual", "📅", "HO"),
-            ("Conexión y Comunidad", "🌐", "CM"),
-            ("Interactivos y Educativos", "🎮", "ED")
+            ("Favoritos", "🔖", "FV"),
+            ("Funcionalidades Espirituales", "🕊️", "FE"),
+            ("Recursos y Formación", "📖", "RF"),
+            ("Herramientas de Organización Espiritual", "🗓️", "HO"),
+            ("Conexión y Comunidad", "🤝", "CM"),
+            ("Interactivos y Educativos", "🧠", "ED")
         ]
+
         static let menuItems: [MenuItemModel] = [
-            MenuItemModel(title: "Favoritos", emoji: "⭐️", destination: .favorites),
+            MenuItemModel(title: "Favoritos", emoji: "🔖", destination: .favorites),
             MenuItemModel(title: "Herramientas", emoji: "🧰", destination: .tools),
-            MenuItemModel(title: "Juegos", emoji: "🎮", destination: .games),
-            MenuItemModel(title: "Recursos", emoji: "📚", destination: .resources),
+            MenuItemModel(title: "Trivia", emoji: "🎯", destination: .games),
+            MenuItemModel(title: "Recursos", emoji: "📖", destination: .resources),
             MenuItemModel(title: "Comunidad", emoji: "🤝", destination: .community),
         ]
     }
     
     struct labels {
         static let Tip: LocalizedStringKey = "title_tip"
-        static let Rosary = "Rosario"
-        static let Letanies = "Letanias"
-        static let HowPray = "Como podré Orar?"
+        static let Rosary: LocalizedStringKey = "title_rosary"
+        static let Letanies: LocalizedStringKey = "title_letanies"
+        static let HowPray: LocalizedStringKey = "title_howPray"
+        static let curWord = "ACLAMACIÓN"
+        static let findWord = "SEGUNDA LECTURA"
+        static let creedWord = "Credo"
     }
     
 }

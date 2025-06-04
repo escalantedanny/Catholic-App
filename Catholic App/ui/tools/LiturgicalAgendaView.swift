@@ -105,7 +105,7 @@ struct LiturgicalInfoView: View {
             VStack(alignment: .leading) {
                 Text("Tiempo: \(info.season)")
                     .font(.subheadline)
-                Text("Año litúrgico: \(info.yearCycle)")
+                Text("Año Litúrgico: \(info.yearCycle)")
                     .font(.subheadline)
             }
 

@@ -46,12 +46,9 @@ class BibleApiViewModel: ObservableObject {
         }
     }
 
-    func deleteFavorite(versiculo: Versiculo) async {
-        do {
-            let nuevosFavoritos = try await bibleService.deleteFavoriteVersicle(versiculo)
-            self.favoritos = nuevosFavoritos
-        } catch {
-            print("❌ Error al obtener el evangelio: \(error)")
+    func deleteFavorite(versiculo: Versiculo) {
+        Task {
+            await bibleService.deleteFavoriteVersicle(versiculo)
         }
     }
     

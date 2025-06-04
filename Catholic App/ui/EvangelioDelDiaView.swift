@@ -9,27 +9,27 @@ struct EvangelioDelDiaView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 if let evangelio = viewModel.evangelio {
-                    SeccionEvangelio(titulo: "📖 Primera Lectura", contenido: evangelio.liturgiaDeLaPalabra)
+                    SeccionEvangelio(titulo: "first_reading", contenido: evangelio.liturgiaDeLaPalabra)
 
                     let contenido = evangelio.salmo
-                    if let indiceLectura = contenido.firstIndex(where: { $0.uppercased().contains("SEGUNDA LECTURA") }) {
+                    if let indiceLectura = contenido.firstIndex(where: { $0.uppercased().contains(Constants.labels.findWord) }) {
                         let salmo = Array(contenido[..<indiceLectura])
                         let segundaLectura = Array(contenido[indiceLectura...])
 
                         if !salmo.isEmpty {
-                            SeccionEvangelio(titulo: "🎶 Salmo Responsorial", contenido: cutBefore(palabra: "ACLAMACIÓN", en: salmo))
+                            SeccionEvangelio(titulo: "psalm_title", contenido: cutBefore(palabra: Constants.labels.curWord, en: salmo))
                         }
 
                         if !segundaLectura.isEmpty {
-                            SeccionEvangelio(titulo: "📖 Segunda Lectura", contenido: cutBefore(palabra: "ACLAMACIÓN", en: segundaLectura))
+                            SeccionEvangelio(titulo: "second_reading", contenido: cutBefore(palabra: Constants.labels.curWord, en: segundaLectura))
                         }
                     } else if !contenido.isEmpty {
-                        SeccionEvangelio(titulo: "🎶 Salmo Responsorial", contenido: cutBefore(palabra: "ACLAMACIÓN", en: contenido))
+                        SeccionEvangelio(titulo: "psalm_title", contenido: cutBefore(palabra: Constants.labels.curWord, en: contenido))
                     }
 
-                    SeccionEvangelio(titulo: "📜 Evangelio", contenido: cutBefore(palabra: "Credo", en: evangelio.evangelio))
+                    SeccionEvangelio(titulo: "gospel_title", contenido: cutBefore(palabra: Constants.labels.creedWord, en: evangelio.evangelio))
                 } else {
-                    ProgressView("Cargando evangelio del día...")
+                    ProgressView("charging")
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
@@ -43,7 +43,7 @@ struct EvangelioDelDiaView: View {
         }
     }
     func cutBefore(palabra: String?, en texto: [String]) -> [String] {
-        if let index = texto.firstIndex(where: { $0.contains(palabra ?? "ACLAMACIÓN") }) {
+        if let index = texto.firstIndex(where: { $0.contains(palabra ?? Constants.labels.curWord) }) {
             return Array(texto[..<index])
         }
         return texto
@@ -56,7 +56,7 @@ struct SeccionEvangelio: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(titulo)
+            Text(LocalizedStringKey(titulo))
                 .font(.title3)
                 .bold()
                 .foregroundColor(.accentColor)

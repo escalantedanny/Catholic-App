@@ -92,44 +92,7 @@ struct ShowBodyView: View {
                             .padding(.horizontal)
                             .padding(.bottom, 16)
                             .contextMenu {
-                                Button {
-                                    if let chapter = Int(versiculo.capitulo) {
-                                        navigationPath.append(ChapterNavigation(book: versiculo.libro, chapter: chapter))
-                                    }
-                                } label: {
-                                    Label("Ir al capitulo", systemImage: "arrowshape.turn.up.right.fill")
-                                }
-                                Button {
-                                    let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
-                                    UIPasteboard.general.string = textoCompleto
-                                } label: {
-                                    Label("Copiar versículo", systemImage: "doc.on.doc")
-                                }
-                                Button {
-                                    let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
-                                    let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
-                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                       let rootVC = windowScene.windows.first?.rootViewController {
-                                        rootVC.present(activityVC, animated: true, completion: nil)
-                                    }
-                                } label: {
-                                    Label("Compartir", systemImage: "square.and.arrow.up")
-                                }
-                                if viewModel.isFavorite(versiculo) {
-                                    Button {
-                                        Task {
-                                            await viewModel.deleteFavorite(versiculo: versiculo)
-                                        }
-                                    } label: {
-                                        Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
-                                    }
-                                } else {
-                                    Button {
-                                        viewModel.saveFavoriteVersicle(versiculo: versiculo)
-                                    } label: {
-                                        Label("Agregar a Favoritos", systemImage: "star.fill")
-                                    }
-                                }
+                                contextMenuDetail(for: versiculo)
                             }
                             .navigationDestination(for: ChapterNavigation.self) { destination in
                                 ChapterDetailView(
@@ -140,12 +103,10 @@ struct ShowBodyView: View {
                             .background(Color(.systemBackground))
 
                     } else {
-                        Text("Cargando...!")
+                        Text("charging")
                             .padding()
                     }
-                    
-
-                    
+                                        
                     VStack() {
                         HStack() {
                             Button {
@@ -202,6 +163,45 @@ struct ShowBodyView: View {
             }
         }
 
+    }
+    @ViewBuilder
+    private func contextMenuDetail(for versiculo: Versiculo) -> some View {
+        Button {
+            if let chapter = Int(versiculo.capitulo) {
+                navigationPath.append(ChapterNavigation(book: versiculo.libro, chapter: chapter))
+            }
+        } label: {
+            Label("go_chapter", systemImage: "arrowshape.turn.up.right.fill")
+        }
+        Button {
+            let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+            UIPasteboard.general.string = textoCompleto
+        } label: {
+            Label("copy_verse", systemImage: "doc.on.doc")
+        }
+        Button {
+            let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+            let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(activityVC, animated: true, completion: nil)
+            }
+        } label: {
+            Label("share_verse", systemImage: "square.and.arrow.up")
+        }
+        if viewModel.isFavorite(versiculo) {
+            Button {
+                viewModel.deleteFavorite(versiculo: versiculo)
+            } label: {
+                Label("drop_favorite", systemImage: "minus.circle.fill")
+            }
+        } else {
+            Button {
+                viewModel.saveFavoriteVersicle(versiculo: versiculo)
+            } label: {
+                Label("add_favorite", systemImage: "star.fill")
+            }
+        }
     }
 }
 

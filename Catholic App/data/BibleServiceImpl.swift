@@ -36,7 +36,7 @@ class BibleServiceImpl: IBibleService {
 
     }
     
-    func deleteFavoriteVersicle(_ versiculo: Versiculo) async -> [Versiculo] {
+    func deleteFavoriteVersicle(_ versiculo: Versiculo)  {
         
         var favoritos = loadFavoriteFromDisk()
 
@@ -46,9 +46,9 @@ class BibleServiceImpl: IBibleService {
             $0.versiculo == versiculo.versiculo
         })
         
-        cache.save(favoritos, forKey: "FAVORITE_LIST", expiration: .never)
+        self.cache.save(favoritos, forKey: "FAVORITE_LIST", expiration: .never)
         print("🗑️ Versículo eliminado de favoritos.")
-        return favoritos
+        self.favoritos = favoritos
     }
     
     func isFavorite(_ versiculo: Versiculo) -> Bool {

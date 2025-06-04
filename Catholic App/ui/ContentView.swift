@@ -72,7 +72,7 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
 struct TopBarView: View {
     @Binding var showMenu: Bool
     @Binding var selectedTab: Int
-
+    
     var body: some View {
         HStack {
             Text(Constants.Titles.appName)
@@ -113,5 +113,5 @@ struct TopBarView: View {
 
 #Preview {
     ContentView()
-       .environment(\.colorScheme, .dark)
+       //.environment(\.colorScheme, .dark)
 }
