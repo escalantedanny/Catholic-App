@@ -1,34 +1,75 @@
-import SwiftUI
 import CacheManager
 import Resolver
+import SwiftUI
 
 struct DetailBookChaptersView: View {
-    
+
     let bookSelected: String
     @State private var navigationPath = NavigationPath()
-    @State private var selectedChapter: Int? = nil
-    @State private var navigate = false
+    @State private var selectedBook: String? = nil
+    @State private var searchText = ""
+
     @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
     private let columns = Array(repeating: GridItem(.flexible()), count: 4)
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
             VStack {
-                if bookSelected.isEmpty {
-                    Text("Selecciona un libro del menú lateral")
-                }
+                if selectedBook == nil {
+                    VStack(spacing: 16) {
+                        Text("📖 Explora la Biblia")
+                            .font(.title)
+                            .bold()
 
-                if let book = viewModel.book {
+                        Text("Selecciona un libro para comenzar")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+
+                        TextField("Buscar libro...", text: $searchText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal)
+
+                        List {
+                            ForEach(filteredBooks, id: \.self) { book in
+                                Button {
+                                    selectedBook = book
+                                    searchText = ""
+                                    Task {
+                                        await viewModel.fetchLibro(libro: book)
+                                    }
+                                } label: {
+                                    Text(book)
+                                }
+                            }
+                        }
+                    }
+                } else if let book = viewModel.book {
                     VStack {
-                        Text("\(bookSelected)")
+                        HStack {
+                            Button("🔙 Cambiar libro") {
+                                withAnimation {
+                                    selectedBook = nil
+                                    viewModel.book = nil
+                                    searchText = ""
+                                }
+                            }
+                            .padding(.leading)
+                            Spacer()
+                        }
+
+                        Text(selectedBook!.capitalized)
                             .font(.system(.largeTitle, design: .rounded))
+                            .padding(.top)
+
                         ScrollView {
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(1...book.ctd_chapters, id: \.self) { chapter in
                                     Button {
                                         withAnimation {
                                             navigationPath.removeLast(navigationPath.count)
-                                            navigationPath.append(ChapterNavigation(book: bookSelected, chapter: chapter))
+                                            navigationPath.append(
+                                                ChapterNavigation(book: selectedBook!, chapter: chapter)
+                                            )
                                         }
                                     } label: {
                                         ChapterButtonLabel(chapter: chapter)
@@ -39,30 +80,38 @@ struct DetailBookChaptersView: View {
                             .padding(.top)
                         }
                     }
+                } else {
+                    ProgressView()
                 }
             }
             .padding(.top)
-            .task(id: bookSelected) {
-                await viewModel.fetchLibro(libro: bookSelected)
+            .task {
+                await viewModel.fetchLibros()
+                if !bookSelected.isEmpty {
+                    selectedBook = bookSelected
+                    await viewModel.fetchLibro(libro: bookSelected)
+                }
             }
             .navigationDestination(for: ChapterNavigation.self) { destination in
-                ChapterDetailView(
-                    navigationPath: $navigationPath,
-                    nav: destination
-                )
+                ChapterDetailView(navigationPath: $navigationPath, nav: destination)
+            }
+        }
+    }
+
+    var filteredBooks: [String] {
+        if searchText.isEmpty {
+            return viewModel.books
+        } else {
+            return viewModel.books.filter {
+                $0.localizedCaseInsensitiveContains(searchText)
             }
         }
     }
 }
 
-
 #Preview {
-    NavigationStack {
-        DetailBookChaptersView(bookSelected: "genesis")
-    }
-    //.environment(\.colorScheme, .dark)
+    DetailBookChaptersView(bookSelected: "")
 }
-
 
 struct ChapterButtonLabel: View {
     let chapter: Int
