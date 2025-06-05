@@ -10,13 +10,11 @@
 		2708B0A22DDEACCE0077279A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2708B0A12DDEACCE0077279A /* Localizable.strings */; };
 		2708B1372DE51B850077279A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2708B1362DE51B850077279A /* LaunchScreen.storyboard */; };
 		2718C9E52DE73C2C0064C933 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 2718C9E42DE73C2C0064C933 /* Resolver */; };
-		279694C52DCA9A57007837A6 /* Navigation in Frameworks */ = {isa = PBXBuildFile; productRef = 279694C42DCA9A57007837A6 /* Navigation */; };
 		279834AE2DB93DA000A8135B /* CacheManager in Frameworks */ = {isa = PBXBuildFile; productRef = 279834AD2DB93DA000A8135B /* CacheManager */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2708B0A02DDEACCE0077279A /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		2708B0A42DDEAD370077279A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2708B1362DE51B850077279A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27ABE71D2DB7DE0E002A9EED /* Catholic App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Catholic App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -48,7 +46,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2718C9E52DE73C2C0064C933 /* Resolver in Frameworks */,
-				279694C52DCA9A57007837A6 /* Navigation in Frameworks */,
 				279834AE2DB93DA000A8135B /* CacheManager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,7 +92,6 @@
 			name = "Catholic App";
 			packageProductDependencies = (
 				279834AD2DB93DA000A8135B /* CacheManager */,
-				279694C42DCA9A57007837A6 /* Navigation */,
 				2718C9E42DE73C2C0064C933 /* Resolver */,
 			);
 			productName = "Catholic App";
@@ -121,7 +117,6 @@
 			developmentRegion = "es-419";
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
 				"es-419",
 			);
@@ -129,7 +124,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				279834AC2DB93DA000A8135B /* XCRemoteSwiftPackageReference "CacheManager" */,
-				279694C32DCA9A57007837A6 /* XCRemoteSwiftPackageReference "NavigationManager" */,
 				2718C9E32DE73C2C0064C933 /* XCRemoteSwiftPackageReference "Resolver" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -169,7 +163,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				2708B0A02DDEACCE0077279A /* es-419 */,
-				2708B0A42DDEAD370077279A /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -330,7 +323,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.4;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "escalantedanny.Catholic-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -377,7 +370,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.4;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "escalantedanny.Catholic-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -423,14 +416,6 @@
 				minimumVersion = 1.5.1;
 			};
 		};
-		279694C32DCA9A57007837A6 /* XCRemoteSwiftPackageReference "NavigationManager" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/jogan1075/NavigationManager.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		279834AC2DB93DA000A8135B /* XCRemoteSwiftPackageReference "CacheManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jogan1075/CacheManager";
@@ -446,11 +431,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2718C9E32DE73C2C0064C933 /* XCRemoteSwiftPackageReference "Resolver" */;
 			productName = Resolver;
-		};
-		279694C42DCA9A57007837A6 /* Navigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 279694C32DCA9A57007837A6 /* XCRemoteSwiftPackageReference "NavigationManager" */;
-			productName = Navigation;
 		};
 		279834AD2DB93DA000A8135B /* CacheManager */ = {
 			isa = XCSwiftPackageProductDependency;

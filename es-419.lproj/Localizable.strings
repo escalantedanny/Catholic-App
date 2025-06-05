@@ -1,6 +1,31 @@
 hello_message = "Hello, welcome!";
-favorite_button = "Add to Favorites";
-title_tip = "Tips";
+title_tip = "Consejos";
 title_rosary = "Rosario";
 title_letanies = "Letanias";
 title_howPray = "Como podré Orar?";
+go_chapter = "Ir al capitulo";
+next_chapter = "Siguiente capítulo →";
+previous_chapter = "← Capítulo anterior";
+end_chapter = "📖 End of chapter";
+copy_verse = "Copiar versículo";
+share_verse = "Compartir";
+drop_favorite = "Eliminar de Favoritos";
+add_favorite = "Agregar a Favoritos";
+charging = "Cargando...!";
+psalm_title = "🎶 Salmo Responsorial";
+first_reading = "📖 Primera Lectura";
+second_reading = "📖 Segunda Lectura";
+gospel_title = "📜 Evangelio";
+favorite_verse_title = "Versículos Favoritos";
+no_favorites_verse_yet = "No hay versículos favoritos aún.";
+
+//HowToPrayView
+how_to_pray_title = "Consejos que te ayudarán a orar";
+pray_op_1 = "**1. Encuentra un lugar tranquilo**\nBusca un espacio donde puedas estar en silencio sin distracciones. La oración necesita recogimiento.";
+pray_op_2 = "**2. Haz una pausa**\nRespira profundo, relájate y reconoce que estás en la presencia de Dios.";
+pray_op_3 = "**3. Comienza con una invocación**\nPuedes empezar diciendo: *\"Señor, abre mis labios\"* o *\"Ven, Espíritu Santo\"*.";
+pray_op_4 = "**4. Agradece**\nReconoce lo bueno que hay en tu vida y da gracias a Dios.";
+pray_op_5 = "**5. Háblale como a un amigo**\nCuéntale tus alegrías, miedos, dudas, deseos. No necesitas fórmulas complicadas.";
+pray_op_6 = "**6. Escucha en silencio**\nDespués de hablar, guarda silencio y deja que Dios toque tu corazón.";
+pray_op_7 = "**7. Lee la Palabra de Dios**\nUn versículo del Evangelio puede ayudarte a meditar y sentirte guiado.";
+pray_op_8 = "**8. Termina con una oración sencilla**\nPor ejemplo: *\"Gracias, Señor, por este momento contigo\"*.";

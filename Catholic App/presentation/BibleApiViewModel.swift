@@ -10,12 +10,14 @@ class BibleApiViewModel: ObservableObject {
     @Published var chapter: ChapterResponse?
     @Published var evangelio: EvangelioResponse?
     @Published var favoritos: [Versiculo] = []
+    @Published var faithEvents: [FaithEvent] = []
 
     private let bibleService: IBibleService
     
     init (bibleService: IBibleService) {
         self.bibleService = bibleService
         self.favoritos = favoritos
+        self.faithEvents = faithEvents
         loadFavoritosFromCache()
     }
     
@@ -44,12 +46,9 @@ class BibleApiViewModel: ObservableObject {
         }
     }
 
-    func deleteFavorite(versiculo: Versiculo) async {
-        do {
-            let nuevosFavoritos = try await bibleService.deleteFavoriteVersicle(versiculo)
-            self.favoritos = nuevosFavoritos
-        } catch {
-            print("❌ Error al obtener el evangelio: \(error)")
+    func deleteFavorite(versiculo: Versiculo) {
+        Task {
+            await bibleService.deleteFavoriteVersicle(versiculo)
         }
     }
     
@@ -101,6 +100,15 @@ class BibleApiViewModel: ObservableObject {
             self.book = try await bibleService.fetchLibro(libro: libro, retryCount: retryCount)
         } catch {
             print("❌ Error al obtener los libros: \(error)")
+        }
+    }
+    
+    @MainActor
+    func loadEvents(retryCount: Int = 3) async {
+        do {
+            self.faithEvents = try await bibleService.fetchFaithEvents(retryCount: retryCount)
+        } catch {
+            print("❌ Error: \(error)")
         }
     }
     

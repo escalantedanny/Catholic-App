@@ -14,13 +14,13 @@ struct FavoriteVersesView: View {
 
     var body: some View {
         VStack {
-            Text("Versículos Favoritos")
+            Text("favorite_verse_title")
                 .font(.title)
                 .bold()
                 .padding()
 
             if favoritos.isEmpty {
-                Text("No hay versículos favoritos aún.")
+                Text("no_favorites_verse_yet")
                     .foregroundColor(.gray)
                     .padding()
                 Spacer()
@@ -37,12 +37,10 @@ struct FavoriteVersesView: View {
                         .padding(.vertical, 4)
                         .contextMenu {
                             Button {
-                                Task {
-                                    await viewModel.deleteFavorite(versiculo: versiculo)
-                                    loadFavorites()
-                                }
+                                viewModel.deleteFavorite(versiculo: versiculo)
+                                loadFavorites()
                             } label: {
-                                Label("Eliminar de Favoritos", systemImage: "star.slash.fill")
+                                Label("drop_favorite", systemImage: "star.slash.fill")
                             }
                         }
                     }

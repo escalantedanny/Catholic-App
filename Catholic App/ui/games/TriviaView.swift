@@ -9,67 +9,41 @@ struct TriviaView: View {
     @State private var selectedOption: String? = nil
     @StateObject var viewModel = TriviaViewModel()
     @Environment(\.dismiss) var dismiss
-    
+
     var body: some View {
         VStack(spacing: 24) {
-
             Text("Trivia Católica")
-                .font(.title)
-                .bold()
+                .font(.largeTitle)
+                .fontWeight(.heavy)
+                .padding(.top)
             
-            Text("Puntos: \(viewModel.score)")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-            
-            Text(viewModel.dailyQuestions[currentQuestionIndex].question)
-                .font(.headline)
-                .multilineTextAlignment(.center)
+            if viewModel.hasCompletedTriviaToday {
+                Text("Ya has completado la trivia de hoy 🙌")
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                    .padding()
 
-            ForEach(viewModel.dailyQuestions[currentQuestionIndex].options, id: \.self) { option in
-                Button(action: {
-                    selectedOption = option
-                    showAnswer = true
-                    if option == viewModel.dailyQuestions[currentQuestionIndex].correctAnswer {
-                        viewModel.incrementScore()
-                    }
-                }) {
-                    Text(option)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(8)
+                Text("Vuelve mañana para más preguntas.")
+                    .foregroundColor(.gray)
+
+                Button("Salir") {
+                    dismiss()
                 }
-                .disabled(showAnswer)
-            }
-
-            if showAnswer {
-                Text("Correcta: **\(viewModel.dailyQuestions[currentQuestionIndex].correctAnswer)**")
-                    .foregroundColor(.green)
+                .padding()
+                .background(Color.red.opacity(0.1))
+                .cornerRadius(12)
                 
-                if currentQuestionIndex < viewModel.dailyQuestions.count - 1 {
-                    Button("Siguiente") {
-                        currentQuestionIndex += 1
-                        showAnswer = false
-                        selectedOption = nil
-                    }
-                    .padding(.top)
-                } else {
-                    VStack {
-                        Text("¡Has completado la trivia de hoy!")
-                            .font(.headline)
-                            .foregroundColor(.blue)
-                            .padding(.top)
-                        Button("Salir") {
-                            dismiss()
-                        }
-                        .padding()
-                        .bold()
-                        .font(.system(.title, design: .rounded))
-                        .foregroundStyle(.red)
-                        .cornerRadius(25)
-                        
-                    }
+            } else {
+                Text("Puntos: \(viewModel.score)")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
 
+                questionCard
+
+                Spacer()
+
+                if showAnswer {
+                    answerSection
                 }
             }
         }
@@ -77,19 +51,95 @@ struct TriviaView: View {
         .onAppear {
             viewModel.generateDailyTrivia()
         }
-        .background(Color(.systemBackground))
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .navigationBarBackButtonHidden(true)
     }
-}
 
-struct SeededGenerator: RandomNumberGenerator {
-    private var generator: GKMersenneTwisterRandomSource
-    
-    init(seed: UInt64) {
-        self.generator = GKMersenneTwisterRandomSource(seed: seed)
+    private var questionCard: some View {
+        let question = viewModel.dailyQuestions[currentQuestionIndex]
+
+        return VStack(spacing: 16) {
+            Text(question.question)
+                .font(.title2)
+                .multilineTextAlignment(.center)
+                .foregroundColor(.primary)
+
+            ForEach(question.options, id: \.self) { option in
+                Button(action: {
+                    selectedOption = option
+                    showAnswer = true
+                    if option == question.correctAnswer {
+                        viewModel.incrementScore()
+                    }
+                }) {
+                    HStack {
+                        Text(option)
+                            .fontWeight(.medium)
+                        Spacer()
+                    }
+                    .padding()
+                    .background(optionBackground(option: option))
+                    .cornerRadius(12)
+                    .shadow(color: .gray.opacity(0.2), radius: 2, x: 0, y: 1)
+                }
+                .disabled(showAnswer)
+            }
+        }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 16).fill(Color.white).shadow(radius: 4))
     }
-    
-    mutating func next() -> UInt64 {
-        return UInt64(bitPattern: Int64(generator.nextInt()))
+
+    private func optionBackground(option: String) -> Color {
+        if showAnswer {
+            if option == viewModel.dailyQuestions[currentQuestionIndex].correctAnswer {
+                return Color.green.opacity(0.3)
+            } else if option == selectedOption {
+                return Color.red.opacity(0.3)
+            }
+        }
+        return Color.blue.opacity(0.1)
+    }
+
+    private var answerSection: some View {
+        VStack(spacing: 16) {
+            Text("Respuesta correcta:")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+
+            Text(viewModel.dailyQuestions[currentQuestionIndex].correctAnswer)
+                .font(.headline)
+                .foregroundColor(.green)
+
+            if currentQuestionIndex < viewModel.dailyQuestions.count - 1 {
+                Button("Siguiente pregunta") {
+                    currentQuestionIndex += 1
+                    showAnswer = false
+                    selectedOption = nil
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.blue)
+            } else {
+                VStack(spacing: 10) {
+                    Text("🎉 ¡Has completado la trivia de hoy!")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+                        .multilineTextAlignment(.center)
+
+                    Button("Salir") {
+                        viewModel.markAsCompleted()
+                        dismiss()
+                    }
+                    .font(.headline)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.red.opacity(0.9))
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                }
+            }
+        }
+        .transition(.opacity)
+        .animation(.easeInOut, value: showAnswer)
     }
 }
 

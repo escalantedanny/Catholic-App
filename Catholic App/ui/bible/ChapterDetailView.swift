@@ -48,38 +48,7 @@ struct ChapterDetailView: View {
                         .cornerRadius(10)
                         .shadow(color: Color.primary.opacity(0.1), radius: 2)
                         .contextMenu {
-                            if viewModel.isFavorite(versiculo) {
-                                Button {
-                                    Task {
-                                        await viewModel.deleteFavorite(versiculo: versiculo)
-                                    }
-                                } label: {
-                                    Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
-                                }
-                            } else {
-                                Button {
-                                    viewModel.saveFavoriteVersicle(versiculo: versiculo)
-                                } label: {
-                                    Label("Agregar a Favoritos", systemImage: "star.fill")
-                                }
-                            }
-
-                            Button {
-                                let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
-                                UIPasteboard.general.string = textoCompleto
-                            } label: {
-                                Label("Copiar versículo", systemImage: "doc.on.doc")
-                            }
-                            Button {
-                                let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
-                                let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
-                                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                   let rootVC = windowScene.windows.first?.rootViewController {
-                                    rootVC.present(activityVC, animated: true, completion: nil)
-                                }
-                            } label: {
-                                Label("Compartir", systemImage: "square.and.arrow.up")
-                            }
+                            contextMenuDetail(for: versiculo)
                         }
 
                         if isLast {
@@ -90,7 +59,7 @@ struct ChapterDetailView: View {
                                             navigationPath.removeLast(navigationPath.count)
                                             navigationPath.append(ChapterNavigation(book: nav.book, chapter: beforeChapter))
                                         } label: {
-                                            Text("← Capítulo anterior")
+                                            Text("previous_chapter")
                                                 .font(.caption)
                                                 .foregroundColor(.blue)
                                                 .padding()
@@ -105,7 +74,7 @@ struct ChapterDetailView: View {
                                         navigationPath.removeLast(navigationPath.count)
                                         navigationPath.append(ChapterNavigation(book: nav.book, chapter: afterChapter))
                                     } label: {
-                                        Text("Siguiente capítulo →")
+                                        Text("next_chapter")
                                             .font(.caption)
                                             .foregroundColor(.blue)
                                             .padding()
@@ -115,7 +84,7 @@ struct ChapterDetailView: View {
                                 }
                                 .padding(.horizontal)
 
-                                Text("📖 Fin del capítulo")
+                                Text("end_chapter")
                                     .font(.footnote)
                                     .foregroundColor(.secondary)
                                     .padding(.bottom, 8)
@@ -124,13 +93,54 @@ struct ChapterDetailView: View {
                         }
                     }
                 } else {
-                    ProgressView("Cargando capítulo...")
+                    ProgressView("charging")
                 }
             }
             .padding(.horizontal, 16)
         }
+        .padding(.top)
         .task(id: nav.chapter) {
             await viewModel.fetchDetailBook(libro: nav.book, chapter: nav.chapter)
+        }
+    }
+    
+    @ViewBuilder
+    private func contextMenuDetail(for versiculo: Versiculo) -> some View {
+        if viewModel.isFavorite(versiculo) {
+            Button {
+                Task {
+                    viewModel.deleteFavorite(versiculo: versiculo)
+                    await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
+                }
+            } label: {
+                Label("drop_favorite", systemImage: "minus.circle.fill")
+            }
+        } else {
+            Button {
+                Task {
+                    viewModel.saveFavoriteVersicle(versiculo: versiculo)
+                    await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
+                }
+            } label: {
+                Label("add_favorite", systemImage: "star.fill")
+            }
+        }
+
+        Button {
+            let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+            UIPasteboard.general.string = textoCompleto
+        } label: {
+            Label("copy_verse", systemImage: "doc.on.doc")
+        }
+        Button {
+            let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+            let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(activityVC, animated: true, completion: nil)
+            }
+        } label: {
+            Label("share_verse", systemImage: "square.and.arrow.up")
         }
     }
 }

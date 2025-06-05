@@ -7,7 +7,7 @@ struct ContentView: View {
     @State private var showMenu = false
     @State private var selectedTab: Int = 0
     @State private var viewID = UUID()
-    @State private var bookSelected: String = "Genesis"
+    @State private var bookSelected: String = ""
     @State private var navigationPath = NavigationPath()
     
     var body: some View {
@@ -15,7 +15,7 @@ struct ContentView: View {
             ZStack(alignment: .leading) {
                 VStack(spacing: 0) {
 
-                    TopBarView(showMenu: $showMenu)
+                    TopBarView(showMenu: $showMenu, selectedTab: $selectedTab)
                         .background(Color.gray)
 
                     contentView(for: selectedTab, bookSelected: bookSelected)
@@ -63,7 +63,7 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
         case 3:
             EvangelioDelDiaView()
         case 4:
-            Text("Soon!")
+            SpiritualToolsView()
         default:
             ShowBodyView()
     }
@@ -71,30 +71,47 @@ func contentView(for tab: Int, bookSelected: String) -> some View {
 
 struct TopBarView: View {
     @Binding var showMenu: Bool
-
+    @Binding var selectedTab: Int
+    
     var body: some View {
         HStack {
             Text(Constants.Titles.appName)
                 .font(.title2)
                 .bold()
+
             Spacer()
-            Button(action: {
-                withAnimation {
-                    showMenu = true
-                }
-            }) {
-                Image(systemName: Constants.Icons.menu)
-                    .padding()
+
+            if selectedTab == 2 {
+               // menuButton
             }
         }
         .padding(.horizontal)
         .padding(.top, 10)
         .foregroundColor(.white)
+        .background(Color.accentColor.opacity(0.5))
+    }
+    
+    private var menuButton: some View {
+        Button(action: {
+            withAnimation {
+                showMenu = true
+            }
+        }) {
+            Image(systemName: Constants.Icons.menu)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+                .padding(10)
+                .background(Color.white.opacity(0.1))
+                .clipShape(Circle())
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel("Menú")
     }
 }
 
 
 #Preview {
     ContentView()
-       .environment(\.colorScheme, .dark)
+       //.environment(\.colorScheme, .dark)
 }

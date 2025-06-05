@@ -1,40 +1,45 @@
 import SwiftUI
 import MapKit
+import Resolver
 
 struct FaithEventsView: View {
-    let events = FaithEvent.sampleEvents
+    @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
 
     var groupedEvents: [FaithEventCategory: [FaithEvent]] {
-        Dictionary(grouping: events, by: { $0.category })
+        Dictionary(grouping: viewModel.faithEvents, by: { $0.category })
     }
 
     var body: some View {
-        List {
-            ForEach(FaithEventCategory.allCases, id: \.self) { category in
-                if let categoryEvents = groupedEvents[category] {
-                    Section(header: Text(category.rawValue)) {
-                        ForEach(categoryEvents) { event in
-                            NavigationLink {
-                                FaithEventDetailView(event: event)
-                            } label: {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(event.title)
-                                        .font(.headline)
-                                    Text(event.formattedDateRange)
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                    Text(event.locationName)
-                                        .font(.footnote)
-                                        .foregroundColor(.gray)
+        Group {
+            List {
+                ForEach(FaithEventCategory.allCases, id: \.self) { category in
+                    if let events = groupedEvents[category] {
+                        Section(header: Text(category.label)) {
+                            ForEach(events) { event in
+                                NavigationLink {
+                                    FaithEventDetailView(event: event)
+                                } label: {
+                                    VStack(alignment: .leading) {
+                                        Text(event.title).font(.headline)
+                                        Text(event.formattedDateRange)
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                        Text(event.locationName)
+                                            .font(.footnote)
+                                            .foregroundColor(.gray)
+                                    }
+                                    .padding(.vertical, 4)
                                 }
-                                .padding(.vertical, 4)
                             }
                         }
                     }
                 }
             }
+            .navigationTitle("🕊️ Eventos y Grupos")
+            .task {
+                await viewModel.loadEvents()
+            }
         }
-        .navigationTitle("🕊️ Eventos y Grupos")
     }
 }
 
@@ -45,41 +50,29 @@ struct FaithEventDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 Text(event.title)
-                    .font(.title)
-                    .bold()
+                    .font(.title).bold()
 
                 Text(event.description)
                     .font(.body)
 
-                HStack {
-                    Image(systemName: "calendar")
-                    Text(event.formattedDateRange)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
+                Label(event.formattedDateRange, systemImage: "calendar")
+                    .foregroundColor(.secondary)
 
-                HStack {
-                    Image(systemName: "mappin.and.ellipse")
-                    Text(event.locationName)
-                }
+                Label(event.locationName, systemImage: "mappin.and.ellipse")
 
-                Map(coordinateRegion: .constant(MKCoordinateRegion(
-                    center: event.coordinate,
-                    span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                )), annotationItems: [event]) { item in
-                    MapMarker(coordinate: item.coordinate, tint: .blue)
+                Map(coordinateRegion: .constant(
+                    MKCoordinateRegion(
+                        center: event.coordinate2D,
+                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                    )
+                ), annotationItems: [event]) { _ in
+                    MapMarker(coordinate: event.coordinate2D)
                 }
                 .frame(height: 200)
                 .cornerRadius(10)
             }
             .padding()
         }
-        .navigationTitle("Detalle del Taller")
-    }
-}
-
-#Preview {
-    NavigationStack {
-        FaithEventsView()
+        .navigationTitle("Detalle")
     }
 }
