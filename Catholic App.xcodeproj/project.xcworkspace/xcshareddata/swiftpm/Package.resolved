@@ -1,5 +1,5 @@
 {
-  "originHash" : "d1a41b81ff35c214603fab76c8fd001227f0d09aeb25d16704f3eb0163c5ab1f",
+  "originHash" : "2839ec78c9956946f9b23f72c7233a7f1651bf8977a384176cf875dad0d57588",
   "pins" : [
     {
       "identity" : "cachemanager",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "02c29fc23683ac4a4be26f4552a314daabd6621f",
         "version" : "1.0.2"
-      }
-    },
-    {
-      "identity" : "navigationmanager",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/jogan1075/NavigationManager.git",
-      "state" : {
-        "revision" : "b5e1a4cc2fc0ba2928577fd9a7c83d1e0d9d1697",
-        "version" : "1.0.0"
       }
     },
     {
