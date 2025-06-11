@@ -1,6 +1,5 @@
-import SwiftUICore
 import SwiftUI
-import XCUIAutomation
+import SwiftUI
 import GameplayKit
 
 struct TriviaView: View {

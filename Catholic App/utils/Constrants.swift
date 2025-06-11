@@ -1,4 +1,5 @@
-import SwiftUICore
+import SwiftUI
+
 struct Constants {
     struct Titles {
         static let appName = "Fe +"
