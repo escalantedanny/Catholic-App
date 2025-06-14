@@ -28,5 +28,7 @@
     <string>Necesitamos tu ubicación para mostrarte iglesias cercanas.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Necesitamos tu ubicación para mostrarte iglesias cercanas.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Usamos tu ubicación para mostrar eventos litúrgicos cercanos y santos locales.</string>	
 </dict>
 </plist>
