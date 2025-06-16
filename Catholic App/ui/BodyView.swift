@@ -82,40 +82,12 @@ struct ShowBodyView: View {
 
                                 Spacer()
 
-                                Button {
-                                    Task {
-                                        if isFavoriteLocal {
-                                            viewModel.deleteFavorite(versiculo: versiculo)
-                                            isFavoriteLocal = false
-                                        } else {
-                                            viewModel.saveFavoriteVersicle(versiculo: versiculo)
-                                            isFavoriteLocal = true
-                                        }
-                                    }
-                                } label: {
-                                    Label("", systemImage: isFavoriteLocal ? "star.fill" : "star")
-                                        .foregroundColor(Color.blue)
-                                }
-
-                                Button {
-                                    if let chapter = Int(versiculo.capitulo) {
-                                        navigationPath.append(ChapterNavigation(book: versiculo.libro, chapter: chapter))
-                                    }
-                                } label: {
-                                    Label("", systemImage: "arrowshape.turn.up.right.fill")
-                                        .foregroundColor(Color.blue)
-                                }
-
-                                Button {
-                                    let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
-                                    let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
-                                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                       let rootVC = windowScene.windows.first?.rootViewController {
-                                        rootVC.present(activityVC, animated: true)
-                                    }
-                                } label: {
-                                    Label("", systemImage: "square.and.arrow.up")
-                                }
+                                MiddleActionsView(
+                                    versiculo: versiculo,
+                                    isFavoriteLocal: $isFavoriteLocal,
+                                    navigationPath: $navigationPath,
+                                    viewModel: viewModel
+                                )
                             }
                         }
                         .frame(alignment: .leading)
@@ -244,6 +216,59 @@ struct ShowBodyView: View {
     }
 }
 
+struct MiddleActionsView: View {
+    let versiculo: Versiculo
+    @Binding var isFavoriteLocal: Bool
+    @Binding var navigationPath: NavigationPath
+    let viewModel: BibleApiViewModel
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button {
+                let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+                UIPasteboard.general.string = textoCompleto
+            } label: {
+                Label("", systemImage: "doc.on.doc")
+            }
+
+            Button {
+                Task {
+                    if isFavoriteLocal {
+                        viewModel.deleteFavorite(versiculo: versiculo)
+                        isFavoriteLocal = false
+                    } else {
+                        viewModel.saveFavoriteVersicle(versiculo: versiculo)
+                        isFavoriteLocal = true
+                    }
+                }
+            } label: {
+                Label("", systemImage: isFavoriteLocal ? "star.fill" : "star")
+                    .foregroundColor(Color.blue)
+            }
+
+            Button {
+                if let chapter = Int(versiculo.capitulo) {
+                    navigationPath.append(ChapterNavigation(book: versiculo.libro, chapter: chapter))
+                }
+            } label: {
+                Label("", systemImage: "arrowshape.turn.up.right.fill")
+                    .foregroundColor(Color.blue)
+            }
+
+            Button {
+                let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+                let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let rootVC = windowScene.windows.first?.rootViewController {
+                    rootVC.present(activityVC, animated: true)
+                }
+            } label: {
+                Label("", systemImage: "square.and.arrow.up")
+            }
+        }
+    }
+}
+
 struct MenuItem: View {
     let icon: String
     let title: LocalizedStringKey
@@ -269,6 +294,8 @@ struct MenuItem: View {
     }
 }
 
+
 #Preview {
     ShowBodyView()
 }
+
