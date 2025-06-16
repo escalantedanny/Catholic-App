@@ -5,9 +5,6 @@ struct BasicTopBarView: View {
 
     var body: some View {
         HStack {
-            Text(Constants.Titles.appName)
-                .font(.title2)
-                .bold()
             Spacer()
             Button(action: {
                 withAnimation {
@@ -29,9 +26,6 @@ struct DetailTopBarMenu: View {
 
     var body: some View {
         HStack {
-            Text(Constants.Titles.appName)
-                .font(.title2)
-                .bold()
             Spacer()
             Button {
                 withAnimation {
