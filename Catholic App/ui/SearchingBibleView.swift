@@ -135,6 +135,38 @@ struct VersiculoRowView: View {
                 .foregroundColor(.gray)
         }
         .padding(.vertical, 4)
+        .swipeActions(edge: .trailing) {
+            Button(action: onGoToChapter) {
+                Label("Ir al capítulo", systemImage: "arrowshape.turn.up.right.fill")
+            }.tint(.blue)
+
+            if isFavorite {
+                Button(action: onRemoveFavorite) {
+                    Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
+                }.tint(.red)
+            } else {
+                Button(action: onAddFavorite) {
+                    Label("Agregar a Favoritos", systemImage: "star.fill")
+                }.tint(.green)
+            }
+
+        }
+        .swipeActions(edge: .leading) {
+            Button(action: onGoToChapter) {
+                Label("Ir al capítulo", systemImage: "arrowshape.turn.up.right.fill")
+            }.tint(.blue)
+
+            if isFavorite {
+                Button(action: onRemoveFavorite) {
+                    Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
+                }.tint(.red)
+            } else {
+                Button(action: onAddFavorite) {
+                    Label("Agregar a Favoritos", systemImage: "star.fill")
+                }.tint(.green)
+            }
+
+        }
         .contextMenu {
             Button(action: onGoToChapter) {
                 Label("Ir al capítulo", systemImage: "arrowshape.turn.up.right.fill")

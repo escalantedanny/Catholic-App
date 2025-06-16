@@ -43,6 +43,26 @@ struct FavoriteVersesView: View {
                                 Label("drop_favorite", systemImage: "star.slash.fill")
                             }
                         }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                Task {
+                                    viewModel.deleteFavorite(versiculo: versiculo)
+                                    await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
+                                }
+                            } label: {
+                                Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
+                            }
+                        }
+                        .swipeActions(edge: .leading) {
+                            Button(role: .destructive) {
+                                Task {
+                                    viewModel.deleteFavorite(versiculo: versiculo)
+                                    await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
+                                }
+                            } label: {
+                                Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
+                            }
+                        }
                     }
                 }
             }
