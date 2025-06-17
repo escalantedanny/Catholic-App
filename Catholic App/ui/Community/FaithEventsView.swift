@@ -46,6 +46,18 @@ struct FaithEventsView: View {
 struct FaithEventDetailView: View {
     let event: FaithEvent
 
+    @State private var position: MapCameraPosition
+
+    init(event: FaithEvent) {
+        self.event = event
+        _position = State(initialValue: .region(
+            MKCoordinateRegion(
+                center: event.coordinate2D,
+                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            )
+        ))
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -60,13 +72,8 @@ struct FaithEventDetailView: View {
 
                 Label(event.locationName, systemImage: "mappin.and.ellipse")
 
-                Map(coordinateRegion: .constant(
-                    MKCoordinateRegion(
-                        center: event.coordinate2D,
-                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                    )
-                ), annotationItems: [event]) { _ in
-                    MapMarker(coordinate: event.coordinate2D)
+                Map(position: $position) {
+                    Marker(event.title, coordinate: event.coordinate2D)
                 }
                 .frame(height: 200)
                 .cornerRadius(10)

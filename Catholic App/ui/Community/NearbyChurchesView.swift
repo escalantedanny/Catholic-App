@@ -3,22 +3,30 @@ import MapKit
 
 
 struct NearbyChurchesView: View {
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: -33.44, longitude: -70.65),
-        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01) // más zoom
-    )
+    @State private var position: MapCameraPosition
+
+    init() {
+        _position = State(initialValue: .region(
+            MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: -33.44, longitude: -70.65),
+                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            )
+        ))
+    }
 
     var body: some View {
-        Map(coordinateRegion: $region, annotationItems: Church.sampleData) { church in
-            MapAnnotation(coordinate: church.coordinate) {
-                VStack {
-                    Image(systemName: "building.columns")
-                        .font(.title)
-                        .foregroundColor(.blue)
-                    Text(church.name)
-                        .font(.caption2)
-                        .fixedSize()
-                        .multilineTextAlignment(.center)
+        Map(position: $position) {
+            ForEach(Church.sampleData) { church in
+                Annotation(church.name, coordinate: church.coordinate) {
+                    VStack {
+                        Image(systemName: "building.columns")
+                            .font(.title)
+                            .foregroundColor(.blue)
+                        Text(church.name)
+                            .font(.caption2)
+                            .fixedSize()
+                            .multilineTextAlignment(.center)
+                    }
                 }
             }
         }

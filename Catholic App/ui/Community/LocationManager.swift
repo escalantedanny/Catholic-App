@@ -31,13 +31,14 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func requestLocation() {
-        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse || CLLocationManager.authorizationStatus() == .authorizedAlways {
+        let status = manager.authorizationStatus
+
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
             manager.startUpdatingLocation()
-        } else {
+        } else if status == .notDetermined {
             manager.requestWhenInUseAuthorization()
         }
     }
-
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
