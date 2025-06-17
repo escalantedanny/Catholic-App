@@ -298,4 +298,3 @@ struct MenuItem: View {
 #Preview {
     ShowBodyView()
 }
-

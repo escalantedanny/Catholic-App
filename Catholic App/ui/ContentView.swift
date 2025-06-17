@@ -75,9 +75,6 @@ struct TopBarView: View {
     
     var body: some View {
         HStack {
-            Text(Constants.Titles.appName)
-                .font(.title2)
-                .bold()
 
             Spacer()
 
