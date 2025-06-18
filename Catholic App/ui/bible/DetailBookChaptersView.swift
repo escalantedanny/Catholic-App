@@ -59,7 +59,7 @@ struct DetailBookChaptersView: View {
                             Spacer()
                         }
 
-                        Text(selectedBook!.capitalized)
+                        Text(selectedBook!)
                             .font(.system(.largeTitle, design: .rounded))
                             .padding(.top)
 
@@ -113,7 +113,7 @@ struct DetailBookChaptersView: View {
 }
 
 #Preview {
-    DetailBookChaptersView(bookSelected: "deuteronomio")
+    DetailBookChaptersView(bookSelected: "ii Reyes")
 }
 
 struct ChapterButtonLabel: View {
