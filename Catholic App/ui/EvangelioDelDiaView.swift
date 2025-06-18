@@ -9,6 +9,15 @@ struct EvangelioDelDiaView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 if let evangelio = viewModel.evangelio {
+                    
+                    Text(viewModel.liturgiaTitle)
+                        .font(.title3)
+                        .bold()
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(.accentColor)
+                        .padding(.vertical, 14)
+                    
                     SeccionEvangelio(titulo: "first_reading", contenido: evangelio.liturgiaDeLaPalabra)
 
                     let contenido = evangelio.salmo
@@ -59,7 +68,7 @@ struct SeccionEvangelio: View {
             Text(LocalizedStringKey(titulo))
                 .font(.title3)
                 .bold()
-                .foregroundColor(.accentColor)
+                .foregroundColor(.black)
                 .padding(.vertical, 16)
 
             ForEach(contenido, id: \.self) { linea in

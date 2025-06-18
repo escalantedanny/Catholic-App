@@ -11,6 +11,7 @@ class BibleApiViewModel: ObservableObject {
     @Published var evangelio: EvangelioResponse?
     @Published var favoritos: [Versiculo] = []
     @Published var faithEvents: [FaithEvent] = []
+    @Published var liturgiaTitle: String = ""
 
     private let bibleService: IBibleService
     
@@ -18,6 +19,7 @@ class BibleApiViewModel: ObservableObject {
         self.bibleService = bibleService
         self.favoritos = favoritos
         self.faithEvents = faithEvents
+        self.liturgiaTitle = ""
         loadFavoritosFromCache()
     }
     
@@ -71,6 +73,7 @@ class BibleApiViewModel: ObservableObject {
     func fetchEvangelioDelDia() async {
         do {
             self.evangelio = try await bibleService.fetchEvangelioDelDia()
+            formatearFechaLiturgia(self.evangelio?.fecha ?? "")
         } catch {
             print("❌ Error al obtener el evangelio: \(error)")
         }
@@ -109,6 +112,21 @@ class BibleApiViewModel: ObservableObject {
             self.faithEvents = try await bibleService.fetchFaithEvents(retryCount: retryCount)
         } catch {
             print("❌ Error: \(error)")
+        }
+    }
+    
+    func formatearFechaLiturgia(_ fechaStr: String) {
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "dd/MM/yyyy"
+        inputFormatter.locale = Locale(identifier: "es_ES")
+
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "EEEE d 'de' MMMM 'de' yyyy"
+        outputFormatter.locale = Locale(identifier: "es_ES")
+
+        if let date = inputFormatter.date(from: fechaStr) {
+            let fechaFormateada = outputFormatter.string(from: date).capitalized
+            self.liturgiaTitle = fechaFormateada
         }
     }
     
