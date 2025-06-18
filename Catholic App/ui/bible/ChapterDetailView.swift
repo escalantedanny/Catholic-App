@@ -5,7 +5,7 @@ import Resolver
 struct ChapterDetailView: View {
     @Binding var navigationPath: NavigationPath
     let nav: ChapterNavigation
-
+    
     @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
 
     var body: some View {
@@ -45,7 +45,6 @@ struct ChapterDetailView: View {
                 }
                 .listStyle(.plain)
 
-
                 Section {
                     VStack(spacing: 16) {
                         HStack {
@@ -68,7 +67,7 @@ struct ChapterDetailView: View {
                             if !nav.isLast {
                                 Button {
                                     navigationPath.removeLast(navigationPath.count)
-                                    navigationPath.append(ChapterNavigation(book: nav.book, chapter: afterChapter))
+                                    navigationPath.append(ChapterNavigation(book: nav.book, chapter: afterChapter, isLast: nav.isLast == false))
                                 } label: {
                                     Text("next_chapter")
                                         .font(.caption)
@@ -81,11 +80,6 @@ struct ChapterDetailView: View {
                             
                         }
                         .padding(.horizontal)
-
-                        Text("end_chapter")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                            .padding(.bottom, 8)
                     }
                     .padding(.top, 16)
                 }
@@ -131,6 +125,7 @@ struct ChapterDataView: View {
                 } label: {
                     Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
                 }
+                .tint(.red)
             } else {
                 Button {
                     Task {
@@ -140,6 +135,7 @@ struct ChapterDataView: View {
                 } label: {
                     Label("Agregar a Favoritos", systemImage: "star.fill")
                 }
+                .tint(.green)
             }
         }
         .swipeActions(edge: .leading) {
@@ -152,6 +148,7 @@ struct ChapterDataView: View {
                 } label: {
                     Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
                 }
+                .tint(.red)
             } else {
                 Button {
                     Task {
@@ -161,6 +158,7 @@ struct ChapterDataView: View {
                 } label: {
                     Label("Agregar a Favoritos", systemImage: "star.fill")
                 }
+                .tint(.green)
             }
         }
         .contextMenu {
@@ -209,7 +207,7 @@ struct ChapterDataView: View {
     NavigationStack {
         ChapterDetailView(
             navigationPath: .constant(NavigationPath()),
-            nav: ChapterNavigation(book: "deuteronomio", chapter: 34, isLast: true)
+            nav: ChapterNavigation(book: "deuteronomio", chapter: 33, isLast: false)
         )
     }
 }
