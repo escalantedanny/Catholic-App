@@ -95,6 +95,18 @@ class BibleServiceImpl: IBibleService {
             print("❌ URL inválida.")
             throw URLError(.badURL)
         }
+        
+        let hoy = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        let hoyString = formatter.string(from: hoy)
+        
+        if let cached: EvangelioResponse = cache.get(forKey: "evangelio-\(hoyString)"),
+           cached.fecha == hoyString {
+            print("📦 Evangelio del día cargado desde caché")
+            return cached
+        }
+        
 
         for attempt in 1...3 {
             do {
@@ -111,6 +123,12 @@ class BibleServiceImpl: IBibleService {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let response = try decoder.decode(EvangelioResponse.self, from: data)
+                let now = Date()
+                let calendar = Calendar.current
+                if let midnight = calendar.nextDate(after: now, matching: DateComponents(hour: 0, minute: 0), matchingPolicy: .nextTime) {
+                    let intervalUntilMidnight = midnight.timeIntervalSince(now)
+                    cache.save(response, forKey: "evangelio-\(response.fecha)", expiration: .custom(intervalUntilMidnight))
+                }
                 print("✅ Evangelio recibido correctamente.")
                 return response
 
