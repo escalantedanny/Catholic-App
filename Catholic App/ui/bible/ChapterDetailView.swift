@@ -21,6 +21,8 @@ struct ChapterDetailView: View {
                         .padding(.bottom)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
+                
+                
 
                 let sortedVerses = chapterData.verses.sorted { Int($0.key)! < Int($1.key)! }
                 let beforeChapter = nav.chapter - 1
@@ -28,7 +30,6 @@ struct ChapterDetailView: View {
 
                 List {
                     ForEach(sortedVerses, id: \.key) { key, verse in
-                        let isLast = key == sortedVerses.last?.key
                         let versiculo = Versiculo(
                             libro: nav.book,
                             capitulo: String(nav.chapter),
@@ -40,53 +41,56 @@ struct ChapterDetailView: View {
                             versiculo: versiculo,
                             viewModel: viewModel
                         )
-
-                        if isLast {
-                            Section {
-                                VStack(spacing: 16) {
-                                    HStack {
-                                        if beforeChapter > 0 {
-                                            Button {
-                                                navigationPath.removeLast(navigationPath.count)
-                                                navigationPath.append(ChapterNavigation(book: nav.book, chapter: beforeChapter))
-                                            } label: {
-                                                Text("previous_chapter")
-                                                    .font(.caption)
-                                                    .foregroundColor(.blue)
-                                                    .padding()
-                                                    .background(Color.blue.opacity(0.05))
-                                                    .cornerRadius(16)
-                                            }
-                                        }
-
-                                        Spacer(minLength: 32)
-
-                                        Button {
-                                            navigationPath.removeLast(navigationPath.count)
-                                            navigationPath.append(ChapterNavigation(book: nav.book, chapter: afterChapter))
-                                        } label: {
-                                            Text("next_chapter")
-                                                .font(.caption)
-                                                .foregroundColor(.blue)
-                                                .padding()
-                                                .background(Color.blue.opacity(0.05))
-                                                .cornerRadius(16)
-                                        }
-                                    }
-                                    .padding(.horizontal)
-
-                                    Text("end_chapter")
-                                        .font(.footnote)
-                                        .foregroundColor(.secondary)
-                                        .padding(.bottom, 8)
-                                }
-                                .padding(.top, 16)
-                            }
-                        }
                     }
                 }
                 .listStyle(.plain)
 
+
+                Section {
+                    VStack(spacing: 16) {
+                        HStack {
+                            if beforeChapter > 0 {
+                                Button {
+                                    navigationPath.removeLast(navigationPath.count)
+                                    navigationPath.append(ChapterNavigation(book: nav.book, chapter: beforeChapter))
+                                } label: {
+                                    Text("previous_chapter")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                        .padding()
+                                        .background(Color.blue.opacity(0.05))
+                                        .cornerRadius(16)
+                                }
+                            }
+
+                            Spacer(minLength: 32)
+
+                            if !nav.isLast {
+                                Button {
+                                    navigationPath.removeLast(navigationPath.count)
+                                    navigationPath.append(ChapterNavigation(book: nav.book, chapter: afterChapter))
+                                } label: {
+                                    Text("next_chapter")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                        .padding()
+                                        .background(Color.blue.opacity(0.05))
+                                        .cornerRadius(16)
+                                }
+                            }
+                            
+                        }
+                        .padding(.horizontal)
+
+                        Text("end_chapter")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                            .padding(.bottom, 8)
+                    }
+                    .padding(.top, 16)
+                }
+                
+                
             } else {
                 ProgressView("charging")
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -205,7 +209,7 @@ struct ChapterDataView: View {
     NavigationStack {
         ChapterDetailView(
             navigationPath: .constant(NavigationPath()),
-            nav: ChapterNavigation(book: "juan", chapter: 15)
+            nav: ChapterNavigation(book: "deuteronomio", chapter: 34, isLast: true)
         )
     }
 }

@@ -54,6 +54,8 @@ struct DetailBookChaptersView: View {
                                 }
                             }
                             .padding(.leading)
+                            .font(.title3)
+                            .foregroundColor(.black)
                             Spacer()
                         }
 
@@ -64,11 +66,12 @@ struct DetailBookChaptersView: View {
                         ScrollView {
                             LazyVGrid(columns: columns, spacing: 12) {
                                 ForEach(1...book.ctd_chapters, id: \.self) { chapter in
+                                    let isLast = chapter == book.ctd_chapters
                                     Button {
                                         withAnimation {
                                             navigationPath.removeLast(navigationPath.count)
                                             navigationPath.append(
-                                                ChapterNavigation(book: selectedBook!, chapter: chapter)
+                                                ChapterNavigation(book: selectedBook!, chapter: chapter, isLast: isLast)
                                             )
                                         }
                                     } label: {
@@ -110,7 +113,7 @@ struct DetailBookChaptersView: View {
 }
 
 #Preview {
-    DetailBookChaptersView(bookSelected: "")
+    DetailBookChaptersView(bookSelected: "deuteronomio")
 }
 
 struct ChapterButtonLabel: View {
