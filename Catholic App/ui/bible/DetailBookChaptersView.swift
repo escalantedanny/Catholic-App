@@ -113,7 +113,7 @@ struct DetailBookChaptersView: View {
 }
 
 #Preview {
-    DetailBookChaptersView(bookSelected: "ii Reyes")
+    DetailBookChaptersView(bookSelected: "II Reyes")
 }
 
 struct ChapterButtonLabel: View {
