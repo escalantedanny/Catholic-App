@@ -5,7 +5,7 @@ import Resolver
 struct ChapterDetailView: View {
     @Binding var navigationPath: NavigationPath
     let nav: ChapterNavigation
-    
+
     @StateObject private var viewModel: BibleApiViewModel = Resolver.resolve()
 
     var body: some View {
@@ -21,15 +21,13 @@ struct ChapterDetailView: View {
                         .padding(.bottom)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
-                
-                
 
                 let sortedVerses = chapterData.verses.sorted { Int($0.key)! < Int($1.key)! }
                 let beforeChapter = nav.chapter - 1
                 let afterChapter = nav.chapter + 1
 
                 List {
-                    ForEach(sortedVerses, id: \.key) { key, verse in
+                    ForEach(sortedVerses, id: \ .key) { key, verse in
                         let versiculo = Versiculo(
                             libro: nav.book,
                             capitulo: String(nav.chapter),
@@ -77,14 +75,12 @@ struct ChapterDetailView: View {
                                         .cornerRadius(16)
                                 }
                             }
-                            
                         }
                         .padding(.horizontal)
                     }
                     .padding(.top, 16)
                 }
-                
-                
+
             } else {
                 ProgressView("charging")
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -100,6 +96,7 @@ struct ChapterDetailView: View {
 struct ChapterDataView: View {
     let versiculo: Versiculo
     let viewModel: BibleApiViewModel
+    @State private var isFavorite: Bool = false
 
     var body: some View {
         HStack(alignment: .top) {
@@ -112,81 +109,26 @@ struct ChapterDataView: View {
                 .bold()
         }
         .padding(16)
-        .background(viewModel.isFavorite(versiculo) ? Color.blue.opacity(0.3) : Color(.systemBackground))
+        .background(isFavorite ? Color.blue.opacity(0.3) : Color(.systemBackground))
         .cornerRadius(10)
         .shadow(color: Color.primary.opacity(0.1), radius: 2)
-        .swipeActions(edge: .trailing) {
-            if viewModel.isFavorite(versiculo) {
-                Button(role: .destructive) {
-                    Task {
-                        viewModel.deleteFavorite(versiculo: versiculo)
-                        await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
-                    }
-                } label: {
-                    Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
-                }
-                .tint(.red)
-            } else {
-                Button {
-                    Task {
-                        viewModel.saveFavoriteVersicle(versiculo: versiculo)
-                        await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
-                    }
-                } label: {
-                    Label("Agregar a Favoritos", systemImage: "star.fill")
-                }
-                .tint(.green)
-            }
+        .onAppear {
+            isFavorite = viewModel.isFavorite(versiculo)
+        }
+        .swipeActions {
+            favoriteAction()
         }
         .swipeActions(edge: .leading) {
-            if viewModel.isFavorite(versiculo) {
-                Button(role: .destructive) {
-                    Task {
-                        viewModel.deleteFavorite(versiculo: versiculo)
-                        await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
-                    }
-                } label: {
-                    Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
-                }
-                .tint(.red)
-            } else {
-                Button {
-                    Task {
-                        viewModel.saveFavoriteVersicle(versiculo: versiculo)
-                        await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
-                    }
-                } label: {
-                    Label("Agregar a Favoritos", systemImage: "star.fill")
-                }
-                .tint(.green)
-            }
+            favoriteAction()
         }
         .contextMenu {
-            if viewModel.isFavorite(versiculo) {
-                Button {
-                    Task {
-                        viewModel.deleteFavorite(versiculo: versiculo)
-                        await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
-                    }
-                } label: {
-                    Label("drop_favorite", systemImage: "minus.circle.fill")
-                }
-            } else {
-                Button {
-                    Task {
-                        viewModel.saveFavoriteVersicle(versiculo: versiculo)
-                        await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
-                    }
-                } label: {
-                    Label("add_favorite", systemImage: "star.fill")
-                }
-            }
+            favoriteButton()
 
             Button {
                 let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
                 UIPasteboard.general.string = textoCompleto
             } label: {
-                Label("copy_verse", systemImage: "doc.on.doc")
+                Label("Copiar versículo", systemImage: "doc.on.doc")
             }
 
             Button {
@@ -197,7 +139,77 @@ struct ChapterDataView: View {
                     rootVC.present(activityVC, animated: true, completion: nil)
                 }
             } label: {
-                Label("share_verse", systemImage: "square.and.arrow.up")
+                Label("Compartir versículo", systemImage: "square.and.arrow.up")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func favoriteAction() -> some View {
+        Button {
+            let textoCompleto = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+            UIPasteboard.general.string = textoCompleto
+        } label: {
+            Label("Copiar versículo", systemImage: "doc.on.doc")
+        }
+        .tint(.gray)
+        Button {
+            let textoCompartir = "\(versiculo.texto) — \(versiculo.libro.uppercased()) \(versiculo.capitulo), \(versiculo.versiculo)"
+            let activityVC = UIActivityViewController(activityItems: [textoCompartir], applicationActivities: nil)
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootVC = windowScene.windows.first?.rootViewController {
+                rootVC.present(activityVC, animated: true, completion: nil)
+            }
+        } label: {
+            Label("Compartir versículo", systemImage: "square.and.arrow.up")
+        }
+        .tint(.blue)
+        if isFavorite {
+            Button(role: .destructive) {
+                Task {
+                    viewModel.deleteFavorite(versiculo: versiculo)
+                    isFavorite = false
+                    await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
+                }
+            } label: {
+                Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
+            }
+            .tint(.red)
+        } else {
+            Button {
+                Task {
+                    viewModel.saveFavoriteVersicle(versiculo: versiculo)
+                    isFavorite = true
+                    await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
+                }
+            } label: {
+                Label("Agregar a Favoritos", systemImage: "star.fill")
+            }
+            .tint(.green)
+        }
+    }
+
+    @ViewBuilder
+    private func favoriteButton() -> some View {
+        if isFavorite {
+            Button {
+                Task {
+                    viewModel.deleteFavorite(versiculo: versiculo)
+                    isFavorite = false
+                    await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
+                }
+            } label: {
+                Label("Eliminar de Favoritos", systemImage: "minus.circle.fill")
+            }
+        } else {
+            Button {
+                Task {
+                    viewModel.saveFavoriteVersicle(versiculo: versiculo)
+                    isFavorite = true
+                    await viewModel.fetchDetailBook(libro: versiculo.libro, chapter: Int(versiculo.capitulo)!)
+                }
+            } label: {
+                Label("Agregar a Favoritos", systemImage: "star.fill")
             }
         }
     }
