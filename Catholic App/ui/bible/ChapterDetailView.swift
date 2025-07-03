@@ -97,6 +97,7 @@ struct ChapterDataView: View {
     let versiculo: Versiculo
     let viewModel: BibleApiViewModel
     @State private var isFavorite: Bool = false
+    @State private var isExpanded: Bool = false
 
     var body: some View {
         HStack(alignment: .top) {
@@ -107,6 +108,22 @@ struct ChapterDataView: View {
             Text(versiculo.texto)
                 .multilineTextAlignment(.leading)
                 .bold()
+                .lineLimit(isExpanded ? nil : 2)
+                .onTapGesture {
+                    withAnimation {
+                        isExpanded.toggle()
+                    }
+                }
+            if !isExpanded {
+                Text("ver más...")
+                    .font(.caption)
+                    .foregroundColor(.blue)
+                    .onTapGesture {
+                        withAnimation {
+                            isExpanded = true
+                        }
+                    }
+            }
         }
         .padding(16)
         .background(isFavorite ? Color.blue.opacity(0.3) : Color(.systemBackground))
@@ -142,6 +159,7 @@ struct ChapterDataView: View {
                 Label("Compartir versículo", systemImage: "square.and.arrow.up")
             }
         }
+        
     }
 
     @ViewBuilder
